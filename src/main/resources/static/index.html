@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>재고 운영 대시보드</title>
+  <link rel="icon" href="data:,">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Noto+Sans+KR:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/dashboard.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.9/dist/chart.umd.min.js"></script>
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div class="brand-mark"><span class="brand-dot"></span><span>STOCK<br>CONTROL</span></div>
+      <div class="sidebar-label">OPERATIONS</div>
+      <nav aria-label="주요 메뉴">
+        <a class="nav-item active" href="#overview"><span class="nav-icon">◈</span>재고 현황</a>
+        <a class="nav-item" href="#flow"><span class="nav-icon">↕</span>입출고 분석</a>
+        <a class="nav-item" href="#capacity"><span class="nav-icon">▥</span>CAPA 모니터링</a>
+      </nav>
+      <div class="sidebar-footer">
+        <div class="source-caption">SOURCE FILE</div>
+        <div class="source-file">재고 및 입고량 파악.xlsx</div>
+        <div class="source-status"><span></span> 2026년 데이터 연결됨</div>
+      </div>
+    </aside>
+
+    <main class="main-content">
+      <header class="topbar">
+        <div>
+          <p class="eyebrow">WAREHOUSE OPERATIONS / 2026</p>
+          <h1>재고 운영 대시보드</h1>
+          <p class="subheading">날짜별 현재고, 창고 CAPA, 입출고량을 한 화면에서 확인합니다.</p>
+        </div>
+        <div class="header-actions">
+          <label class="select-wrap" for="period-select">
+            <span>조회 기간</span>
+            <select id="period-select" aria-label="조회 기간">
+              <option value="all">전체 기간</option>
+              <option value="month-01">2026년 01월</option>
+              <option value="month-02">2026년 02월</option>
+              <option value="month-03">2026년 03월</option>
+              <option value="month-04">2026년 04월</option>
+              <option value="month-05">2026년 05월</option>
+              <option value="month-06">2026년 06월</option>
+              <option value="month-07">2026년 07월</option>
+              <option value="month-08">2026년 08월</option>
+            </select>
+          </label>
+          <div class="data-date" id="data-date">업데이트 확인 중</div>
+        </div>
+      </header>
+
+      <section class="metric-grid" id="overview" aria-label="핵심 지표">
+        <article class="metric-card metric-primary">
+          <div class="metric-heading"><span>현재고량</span><span class="metric-tag">09:00 기준</span></div>
+          <div class="metric-value" id="current-stock">-</div>
+          <div class="metric-foot"><span id="stock-change">-</span><span>TON</span></div>
+        </article>
+        <article class="metric-card">
+          <div class="metric-heading"><span>적정 CAPA 대비</span><span class="metric-dot green"></span></div>
+          <div class="metric-value" id="target-capa">-</div>
+          <div class="metric-foot"><span>권장 기준</span><span id="target-status">-</span></div>
+        </article>
+        <article class="metric-card">
+          <div class="metric-heading"><span>MAX CAPA 대비</span><span class="metric-dot orange"></span></div>
+          <div class="metric-value" id="max-capa">-</div>
+          <div class="metric-foot"><span>최대 허용 기준</span><span id="max-status">-</span></div>
+        </article>
+        <article class="metric-card">
+          <div class="metric-heading"><span>최근 순입고량</span><span class="metric-dot blue"></span></div>
+          <div class="metric-value" id="net-flow">-</div>
+          <div class="metric-foot"><span>입고 - 출고</span><span>TON</span></div>
+        </article>
+      </section>
+
+      <section class="dashboard-grid">
+        <article class="panel panel-wide" id="capacity">
+          <div class="panel-header">
+            <div><p class="panel-kicker">INVENTORY TREND</p><h2>날짜별 현재고 추이</h2></div>
+            <div class="legend"><span class="legend-item"><i class="legend-line navy"></i>현재고</span><span class="legend-item"><i class="legend-line mint"></i>적정 CAPA</span></div>
+          </div>
+          <div class="chart-box large"><canvas id="inventory-chart" aria-label="날짜별 현재고와 CAPA 추이 차트"></canvas></div>
+        </article>
+
+        <article class="panel" id="flow">
+          <div class="panel-header"><div><p class="panel-kicker">CAPACITY UTILIZATION</p><h2>창고 대비 CAPA</h2></div></div>
+          <div class="capa-summary"><strong id="capa-summary-value">-</strong><span>적정 CAPA 대비 평균</span></div>
+          <div class="chart-box capa"><canvas id="capa-chart" aria-label="CAPA 비율 차트"></canvas></div>
+          <div class="capa-note"><span class="status-pill" id="capa-pill">분석 중</span><span>1.00 이하가 안정 구간입니다.</span></div>
+        </article>
+
+        <article class="panel panel-wide">
+          <div class="panel-header">
+            <div><p class="panel-kicker">INBOUND & OUTBOUND</p><h2>날짜별 입출고량</h2></div>
+            <div class="legend"><span class="legend-item"><i class="legend-box inbound"></i>입고</span><span class="legend-item"><i class="legend-box outbound"></i>출고</span></div>
+          </div>
+          <div class="chart-box medium"><canvas id="flow-chart" aria-label="날짜별 입고와 출고량 차트"></canvas></div>
+        </article>
+
+        <article class="panel recent-panel">
+          <div class="panel-header"><div><p class="panel-kicker">LATEST SNAPSHOT</p><h2>최근 운영 현황</h2></div></div>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>날짜</th><th>현재고</th><th>입고</th><th>출고</th><th>순변동</th></tr></thead>
+              <tbody id="recent-table"></tbody>
+            </table>
+          </div>
+        </article>
+      </section>
+      <footer class="page-footer">26년 09시 WMS 재고 시트 기준 · 단위 TON · 1차 대시보드</footer>
+    </main>
+  </div>
+  <script src="/js/dashboard.js"></script>
+</body>
+</html>
