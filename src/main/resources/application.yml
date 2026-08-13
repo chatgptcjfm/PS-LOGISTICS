@@ -1,0 +1,27 @@
+spring:
+  application:
+    name: webapp
+  datasource:
+    url: ${DB_URL:jdbc:mariadb://127.0.0.1:3306/webapp}
+    username: ${DB_USERNAME:webapp}
+    password: ${DB_PASSWORD:webapp}
+    driver-class-name: org.mariadb.jdbc.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    open-in-view: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MariaDBDialect
+
+server:
+  port: ${SERVER_PORT:8080}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  endpoint:
+    health:
+      show-details: always

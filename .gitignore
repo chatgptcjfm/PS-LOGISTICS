@@ -1,33 +1,23 @@
-# prod
-dist/
+# Java / Maven
+target/
+.mvn/wrapper/maven-wrapper.jar
 
-# dev
-.yarn/
-!.yarn/releases
-.vscode/*
-!.vscode/launch.json
-!.vscode/*.code-snippets
-.idea/workspace.xml
-.idea/usage.statistics.xml
-.idea/shelf
-
-# deps
+# Node tooling cache from the original scaffold
 node_modules/
-.wrangler
 
-# env
+# IDE
+.idea/
+.vscode/
+*.iml
+
+# Environment and secrets
 .env
-.env.production
-.dev.vars
+.env.*
+!.env.example
 
-# logs
-logs/
+# Logs
 *.log
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-pnpm-debug.log*
-lerna-debug.log*
+logs/
 
-# misc
+# OS
 .DS_Store
