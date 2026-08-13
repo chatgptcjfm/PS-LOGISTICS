@@ -20,17 +20,21 @@ Java 17, Spring Boot, MariaDB 기반 웹 프로젝트의 로컬 샌드박스입�
 - `/actuator/health` 애플리케이션 및 DB 상태 확인
 - 업로드된 `재고 및 입고량 파악.xlsx`의 `26년 09시 WMS 재고` 시트 기반 1차 대시보드
 - 전체 기간 및 월별 조회 필터
-- 날짜별 현재고 추이, 적정/MAX CAPA 대비, 입고·출고량, 최근 7일 현황
+- 날짜별 현재고 추이(재고 트렌드 탭), 적정/MAX CAPA 대비, 입고·출고량, 최근 7일 현황
+- 2026년 8월 13일까지 실적(actual), 8월 14일부터 예상(forecast) 구분
+- 웹 화면에서 `.xlsx` 업로드 가능하며, 업로드 파일의 첫 번째 `2026년 WMS` 기준 시트만 파싱
 - Spring Boot 컨텍스트 테스트
 
 ## 대시보드 URI
 
 - `http://localhost:8080/` — 재고 운영 대시보드
 - `/data/inventory-dashboard.json` — 대시보드용 변환 데이터
-- 데이터 기준 시트: `26년 09시 WMS 재고`
+- `POST /api/inventory/upload` — multipart/form-data의 `file` 필드로 `.xlsx` 업로드
+- 데이터 기준 시트: 업로드 파일의 첫 번째 시트(`26년 09시 WMS 재고`)
+- 기준일: `2026-08-13` (이 날짜까지 실적, `2026-08-14`부터 예상)
 - 단위: TON
 
-현재 1차 화면은 Excel 데이터를 정적 JSON으로 변환해 표시합니다. 이후 단계에서 업로드 관리, MariaDB 적재, 실시간/일별 API로 확장할 수 있습니다.
+기본 화면은 변환된 정적 JSON으로 빠르게 표시하고, Excel 업로드 시 Apache POI로 첫 번째 시트를 요청 단위로 파싱해 현재 화면에 반영합니다. 현재 업로드 결과는 MariaDB에 저장하지 않으며, 이후 업로드 이력·MariaDB 적재·실시간 API로 확장할 수 있습니다.
 
 ## 실행 방법
 
@@ -76,7 +80,7 @@ java -jar target/webapp-0.0.1-SNAPSHOT.jar
 
 ## 다음 단계
 
-- Excel 업로드 및 MariaDB 적재 기능
+- 업로드 파일 검증 결과와 업로드 이력의 MariaDB 적재
 - 날짜/창고/품목별 세부 필터
 - 도메인 모델 및 JPA 엔티티 추가
 - Flyway 또는 Liquibase 마이그레이션 도입

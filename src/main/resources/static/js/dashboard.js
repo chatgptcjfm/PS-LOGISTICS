@@ -1,6 +1,7 @@
 const numberFormat = new Intl.NumberFormat('ko-KR', { maximumFractionDigits: 0 });
 const decimalFormat = new Intl.NumberFormat('ko-KR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 let dashboardData = [];
+let dashboardPayload = {};
 let inventoryChart;
 let capaChart;
 let flowChart;
@@ -13,13 +14,25 @@ const dateLabel = (date) => {
   return `${Number(month)}/${Number(day)}`;
 };
 const compactDate = (date) => date.replaceAll('-', '.');
+const isForecast = (record) => record.dataType === 'forecast';
+const actualRecords = (records) => records.filter((record) => !isForecast(record));
+const latestOperationalRecord = (records) => {
+  const actual = actualRecords(records);
+  return actual.length ? actual[actual.length - 1] : records[records.length - 1];
+};
 
 async function loadDashboard() {
   const response = await fetch('/data/inventory-dashboard.json');
   if (!response.ok) throw new Error('대시보드 데이터를 불러오지 못했습니다.');
-  const payload = await response.json();
-  dashboardData = payload.records;
-  document.getElementById('data-date').textContent = `데이터 기준 ${payload.updatedAt}`;
+  setDashboardPayload(await response.json());
+  document.getElementById('upload-status').textContent = '첫 번째 WMS 시트 사용';
+}
+
+function setDashboardPayload(payload) {
+  dashboardPayload = payload;
+  dashboardData = payload.records || [];
+  const asOf = payload.asOfDate || '2026-08-13';
+  document.getElementById('data-date').textContent = `기준일 ${asOf.replaceAll('-', '.')} · 이후 예상`;
   renderAll();
 }
 
@@ -41,8 +54,9 @@ function renderAll() {
 }
 
 function renderMetrics(records) {
-  const latest = records[records.length - 1];
-  const previous = records.length > 1 ? records[records.length - 2] : latest;
+  const latest = latestOperationalRecord(records);
+  const operationalIndex = records.indexOf(latest);
+  const previous = operationalIndex > 0 ? records[operationalIndex - 1] : latest;
   const change = valueOrZero(latest.currentStock) - valueOrZero(previous.currentStock);
   const netFlow = valueOrZero(latest.inbound) - valueOrZero(latest.outbound);
   const target = valueOrZero(latest.targetCapaRatio);
@@ -76,11 +90,15 @@ const chartDefaults = {
 function destroyChart(chart) { if (chart) chart.destroy(); }
 function renderInventoryChart(records) {
   destroyChart(inventoryChart);
+  const actual = records.map((record) => !isForecast(record) ? record.currentStock : null);
+  const forecast = records.map((record) => isForecast(record) ? record.currentStock : null);
+  const targetCapa = records.map((record) => record.currentStock && record.targetCapaRatio ? record.currentStock / record.targetCapaRatio : null);
   inventoryChart = new Chart(document.getElementById('inventory-chart'), {
     type: 'line',
     data: { labels: records.map(r => dateLabel(r.date)), datasets: [
-      { label: '현재고', data: records.map(r => r.currentStock), borderColor: '#2446a7', backgroundColor: 'rgba(36,70,167,.08)', borderWidth: 2.5, pointRadius: 0, pointHoverRadius: 4, fill: true, tension: .35 },
-      { label: '적정 CAPA', data: records.map(r => r.currentStock && r.targetCapaRatio ? r.currentStock / r.targetCapaRatio : null), borderColor: '#46c2a5', borderWidth: 1.7, pointRadius: 0, borderDash: [5, 5], tension: .35 }
+      { label: '실적 현재고', data: actual, borderColor: '#2446a7', backgroundColor: 'rgba(36,70,167,.08)', borderWidth: 2.5, pointRadius: 0, pointHoverRadius: 4, fill: true, tension: .35 },
+      { label: '예상재고', data: forecast, borderColor: '#8195df', backgroundColor: 'rgba(129,149,223,.05)', borderWidth: 2.5, borderDash: [7, 5], pointRadius: 0, pointHoverRadius: 4, fill: true, tension: .35 },
+      { label: '적정 CAPA', data: targetCapa, borderColor: '#46c2a5', borderWidth: 1.7, pointRadius: 0, borderDash: [5, 5], tension: .35 }
     ] },
     options: { ...chartDefaults, plugins: { ...chartDefaults.plugins, tooltip: { ...chartDefaults.plugins.tooltip, callbacks: { label: (context) => `${context.dataset.label}: ${formatTon(context.parsed.y)} TON` } } } }
   });
@@ -113,12 +131,40 @@ function renderFlowChart(records) {
 function renderRecentTable(records) {
   const rows = records.slice(-7).reverse().map((record) => {
     const net = valueOrZero(record.inbound) - valueOrZero(record.outbound);
-    return `<tr><td>${compactDate(record.date)}</td><td>${formatTon(record.currentStock)}</td><td>${formatTon(record.inbound)}</td><td>${formatTon(record.outbound)}</td><td class="${net >= 0 ? 'positive' : 'negative'}">${net >= 0 ? '+' : ''}${formatTon(net)}</td></tr>`;
+    const typeLabel = isForecast(record) ? '<span class="table-badge forecast">예상</span>' : '<span class="table-badge actual">실적</span>';
+    return `<tr><td>${compactDate(record.date)}</td><td>${typeLabel}</td><td>${formatTon(record.currentStock)}</td><td>${formatTon(record.inbound)}</td><td>${formatTon(record.outbound)}</td><td class="${net >= 0 ? 'positive' : 'negative'}">${net >= 0 ? '+' : ''}${formatTon(net)}</td></tr>`;
   }).join('');
   document.getElementById('recent-table').innerHTML = rows;
 }
 
+async function uploadExcel(file) {
+  const status = document.getElementById('upload-status');
+  if (!file) return;
+  status.textContent = '업로드 및 분석 중...';
+  const formData = new FormData();
+  formData.append('file', file);
+  try {
+    const response = await fetch('/api/inventory/upload', { method: 'POST', body: formData });
+    const payload = await response.json();
+    if (!response.ok) throw new Error(payload.message || 'Excel 업로드에 실패했습니다.');
+    setDashboardPayload(payload);
+    status.textContent = `${payload.sheetName} 반영 완료`;
+  } catch (error) {
+    status.textContent = error.message;
+  }
+}
+
 document.getElementById('period-select').addEventListener('change', renderAll);
+document.querySelectorAll('.nav-item').forEach((item) => {
+  item.addEventListener('click', () => {
+    document.querySelectorAll('.nav-item').forEach((navItem) => navItem.classList.remove('active'));
+    item.classList.add('active');
+  });
+});
+document.getElementById('excel-upload').addEventListener('change', (event) => {
+  uploadExcel(event.target.files[0]);
+  event.target.value = '';
+});
 loadDashboard().catch((error) => {
   document.getElementById('data-date').textContent = error.message;
   console.error(error);
