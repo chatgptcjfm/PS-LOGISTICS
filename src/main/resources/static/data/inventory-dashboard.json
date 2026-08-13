@@ -1,10 +1,14 @@
 {
-  "source": "재고 및 입고량 파악.xlsx / 26년 09시 WMS 재고",
+  "source": "재고 및 입고량 파악.xlsx / 첫 번째 시트: 26년 09시 WMS 재고",
+  "sheetName": "26년 09시 WMS 재고",
   "unit": "TON",
+  "asOfDate": "2026-08-13",
+  "forecastFrom": "2026-08-14",
   "updatedAt": "2026-08-13",
   "records": [
     {
       "date": "2026-01-01",
+      "dataType": "actual",
       "currentStock": 17952.657,
       "targetCapaRatio": 1.678,
       "maxCapaRatio": 1.496,
@@ -19,6 +23,7 @@
     },
     {
       "date": "2026-01-02",
+      "dataType": "actual",
       "currentStock": 18428.157,
       "targetCapaRatio": 1.722,
       "maxCapaRatio": 1.536,
@@ -33,6 +38,7 @@
     },
     {
       "date": "2026-01-03",
+      "dataType": "actual",
       "currentStock": 18307.821,
       "targetCapaRatio": 1.711,
       "maxCapaRatio": 1.526,
@@ -47,6 +53,7 @@
     },
     {
       "date": "2026-01-04",
+      "dataType": "actual",
       "currentStock": 18739.337,
       "targetCapaRatio": 1.751,
       "maxCapaRatio": 1.562,
@@ -61,6 +68,7 @@
     },
     {
       "date": "2026-01-05",
+      "dataType": "actual",
       "currentStock": 19391.0,
       "targetCapaRatio": 1.812,
       "maxCapaRatio": 1.616,
@@ -75,6 +83,7 @@
     },
     {
       "date": "2026-01-06",
+      "dataType": "actual",
       "currentStock": 19238.0,
       "targetCapaRatio": 1.798,
       "maxCapaRatio": 1.603,
@@ -89,6 +98,7 @@
     },
     {
       "date": "2026-01-07",
+      "dataType": "actual",
       "currentStock": 18513.0,
       "targetCapaRatio": 1.73,
       "maxCapaRatio": 1.543,
@@ -103,6 +113,7 @@
     },
     {
       "date": "2026-01-08",
+      "dataType": "actual",
       "currentStock": 18195.0,
       "targetCapaRatio": 1.7,
       "maxCapaRatio": 1.516,
@@ -117,6 +128,7 @@
     },
     {
       "date": "2026-01-09",
+      "dataType": "actual",
       "currentStock": 17565.0,
       "targetCapaRatio": 1.642,
       "maxCapaRatio": 1.464,
@@ -131,6 +143,7 @@
     },
     {
       "date": "2026-01-10",
+      "dataType": "actual",
       "currentStock": 17493.028,
       "targetCapaRatio": 1.635,
       "maxCapaRatio": 1.458,
@@ -145,6 +158,7 @@
     },
     {
       "date": "2026-01-11",
+      "dataType": "actual",
       "currentStock": 17952.526,
       "targetCapaRatio": 1.678,
       "maxCapaRatio": 1.496,
@@ -159,6 +173,7 @@
     },
     {
       "date": "2026-01-12",
+      "dataType": "actual",
       "currentStock": 18759.0,
       "targetCapaRatio": 1.753,
       "maxCapaRatio": 1.563,
@@ -173,6 +188,7 @@
     },
     {
       "date": "2026-01-13",
+      "dataType": "actual",
       "currentStock": 18478.0,
       "targetCapaRatio": 1.727,
       "maxCapaRatio": 1.54,
@@ -187,6 +203,7 @@
     },
     {
       "date": "2026-01-14",
+      "dataType": "actual",
       "currentStock": 17943.0,
       "targetCapaRatio": 1.677,
       "maxCapaRatio": 1.495,
@@ -201,6 +218,7 @@
     },
     {
       "date": "2026-01-15",
+      "dataType": "actual",
       "currentStock": 17495.0,
       "targetCapaRatio": 1.635,
       "maxCapaRatio": 1.458,
@@ -215,6 +233,7 @@
     },
     {
       "date": "2026-01-16",
+      "dataType": "actual",
       "currentStock": 16993.468,
       "targetCapaRatio": 1.588,
       "maxCapaRatio": 1.416,
@@ -229,6 +248,7 @@
     },
     {
       "date": "2026-01-17",
+      "dataType": "actual",
       "currentStock": 16577.972,
       "targetCapaRatio": 1.549,
       "maxCapaRatio": 1.381,
@@ -243,6 +263,7 @@
     },
     {
       "date": "2026-01-18",
+      "dataType": "actual",
       "currentStock": 16876.244,
       "targetCapaRatio": 1.577,
       "maxCapaRatio": 1.406,
@@ -257,6 +278,7 @@
     },
     {
       "date": "2026-01-19",
+      "dataType": "actual",
       "currentStock": 17741.0,
       "targetCapaRatio": 1.658,
       "maxCapaRatio": 1.478,
@@ -271,6 +293,7 @@
     },
     {
       "date": "2026-01-20",
+      "dataType": "actual",
       "currentStock": 17280.0,
       "targetCapaRatio": 1.615,
       "maxCapaRatio": 1.44,
@@ -285,6 +308,7 @@
     },
     {
       "date": "2026-01-21",
+      "dataType": "actual",
       "currentStock": 16820.0,
       "targetCapaRatio": 1.572,
       "maxCapaRatio": 1.402,
@@ -299,6 +323,7 @@
     },
     {
       "date": "2026-01-22",
+      "dataType": "actual",
       "currentStock": 16604.0,
       "targetCapaRatio": 1.552,
       "maxCapaRatio": 1.384,
@@ -313,6 +338,7 @@
     },
     {
       "date": "2026-01-23",
+      "dataType": "actual",
       "currentStock": 15833.0,
       "targetCapaRatio": 1.48,
       "maxCapaRatio": 1.319,
@@ -327,6 +353,7 @@
     },
     {
       "date": "2026-01-24",
+      "dataType": "actual",
       "currentStock": 15056.0,
       "targetCapaRatio": 1.407,
       "maxCapaRatio": 1.255,
@@ -341,6 +368,7 @@
     },
     {
       "date": "2026-01-25",
+      "dataType": "actual",
       "currentStock": 15145.0,
       "targetCapaRatio": 1.415,
       "maxCapaRatio": 1.262,
@@ -355,6 +383,7 @@
     },
     {
       "date": "2026-01-26",
+      "dataType": "actual",
       "currentStock": 16160.0,
       "targetCapaRatio": 1.51,
       "maxCapaRatio": 1.347,
@@ -369,6 +398,7 @@
     },
     {
       "date": "2026-01-27",
+      "dataType": "actual",
       "currentStock": 15820.0,
       "targetCapaRatio": 1.479,
       "maxCapaRatio": 1.318,
@@ -383,6 +413,7 @@
     },
     {
       "date": "2026-01-28",
+      "dataType": "actual",
       "currentStock": 15301.0,
       "targetCapaRatio": 1.43,
       "maxCapaRatio": 1.275,
@@ -397,6 +428,7 @@
     },
     {
       "date": "2026-01-29",
+      "dataType": "actual",
       "currentStock": 15154.0,
       "targetCapaRatio": 1.416,
       "maxCapaRatio": 1.263,
@@ -411,6 +443,7 @@
     },
     {
       "date": "2026-01-30",
+      "dataType": "actual",
       "currentStock": 14594.0,
       "targetCapaRatio": 1.364,
       "maxCapaRatio": 1.216,
@@ -425,6 +458,7 @@
     },
     {
       "date": "2026-01-31",
+      "dataType": "actual",
       "currentStock": 14148.512,
       "targetCapaRatio": 1.322,
       "maxCapaRatio": 1.179,
@@ -439,6 +473,7 @@
     },
     {
       "date": "2026-02-01",
+      "dataType": "actual",
       "currentStock": 14793.512,
       "targetCapaRatio": 1.383,
       "maxCapaRatio": 1.233,
@@ -453,6 +488,7 @@
     },
     {
       "date": "2026-02-02",
+      "dataType": "actual",
       "currentStock": 15790.0,
       "targetCapaRatio": 1.476,
       "maxCapaRatio": 1.316,
@@ -467,6 +503,7 @@
     },
     {
       "date": "2026-02-03",
+      "dataType": "actual",
       "currentStock": 15663.0,
       "targetCapaRatio": 1.464,
       "maxCapaRatio": 1.305,
@@ -481,6 +518,7 @@
     },
     {
       "date": "2026-02-04",
+      "dataType": "actual",
       "currentStock": 15383.0,
       "targetCapaRatio": 1.438,
       "maxCapaRatio": 1.282,
@@ -495,6 +533,7 @@
     },
     {
       "date": "2026-02-05",
+      "dataType": "actual",
       "currentStock": 15030.0,
       "targetCapaRatio": 1.405,
       "maxCapaRatio": 1.252,
@@ -509,6 +548,7 @@
     },
     {
       "date": "2026-02-06",
+      "dataType": "actual",
       "currentStock": 14894.45,
       "targetCapaRatio": 1.392,
       "maxCapaRatio": 1.241,
@@ -523,6 +563,7 @@
     },
     {
       "date": "2026-02-07",
+      "dataType": "actual",
       "currentStock": 14884.978,
       "targetCapaRatio": 1.391,
       "maxCapaRatio": 1.24,
@@ -537,6 +578,7 @@
     },
     {
       "date": "2026-02-08",
+      "dataType": "actual",
       "currentStock": 15034.9,
       "targetCapaRatio": 1.405,
       "maxCapaRatio": 1.253,
@@ -551,6 +593,7 @@
     },
     {
       "date": "2026-02-09",
+      "dataType": "actual",
       "currentStock": 15959.0,
       "targetCapaRatio": 1.491,
       "maxCapaRatio": 1.33,
@@ -565,6 +608,7 @@
     },
     {
       "date": "2026-02-10",
+      "dataType": "actual",
       "currentStock": 15845.0,
       "targetCapaRatio": 1.481,
       "maxCapaRatio": 1.32,
@@ -579,6 +623,7 @@
     },
     {
       "date": "2026-02-11",
+      "dataType": "actual",
       "currentStock": 15423.0,
       "targetCapaRatio": 1.441,
       "maxCapaRatio": 1.285,
@@ -593,6 +638,7 @@
     },
     {
       "date": "2026-02-12",
+      "dataType": "actual",
       "currentStock": 15062.0,
       "targetCapaRatio": 1.408,
       "maxCapaRatio": 1.255,
@@ -607,6 +653,7 @@
     },
     {
       "date": "2026-02-13",
+      "dataType": "actual",
       "currentStock": 14980.0,
       "targetCapaRatio": 1.4,
       "maxCapaRatio": 1.248,
@@ -621,6 +668,7 @@
     },
     {
       "date": "2026-02-14",
+      "dataType": "actual",
       "currentStock": 14980.0,
       "targetCapaRatio": 1.4,
       "maxCapaRatio": 1.248,
@@ -635,6 +683,7 @@
     },
     {
       "date": "2026-02-15",
+      "dataType": "actual",
       "currentStock": 15118.0,
       "targetCapaRatio": 1.413,
       "maxCapaRatio": 1.26,
@@ -649,6 +698,7 @@
     },
     {
       "date": "2026-02-16",
+      "dataType": "actual",
       "currentStock": 15717.0,
       "targetCapaRatio": 1.469,
       "maxCapaRatio": 1.31,
@@ -663,6 +713,7 @@
     },
     {
       "date": "2026-02-17",
+      "dataType": "actual",
       "currentStock": 16051.0,
       "targetCapaRatio": 1.5,
       "maxCapaRatio": 1.338,
@@ -677,6 +728,7 @@
     },
     {
       "date": "2026-02-18",
+      "dataType": "actual",
       "currentStock": 16673.0,
       "targetCapaRatio": 1.558,
       "maxCapaRatio": 1.389,
@@ -691,6 +743,7 @@
     },
     {
       "date": "2026-02-19",
+      "dataType": "actual",
       "currentStock": 17011.0,
       "targetCapaRatio": 1.59,
       "maxCapaRatio": 1.418,
@@ -705,6 +758,7 @@
     },
     {
       "date": "2026-02-20",
+      "dataType": "actual",
       "currentStock": 16888.0,
       "targetCapaRatio": 1.578,
       "maxCapaRatio": 1.407,
@@ -719,6 +773,7 @@
     },
     {
       "date": "2026-02-21",
+      "dataType": "actual",
       "currentStock": 16676.609,
       "targetCapaRatio": 1.559,
       "maxCapaRatio": 1.39,
@@ -733,6 +788,7 @@
     },
     {
       "date": "2026-02-22",
+      "dataType": "actual",
       "currentStock": 17099.239,
       "targetCapaRatio": 1.598,
       "maxCapaRatio": 1.425,
@@ -747,6 +803,7 @@
     },
     {
       "date": "2026-02-23",
+      "dataType": "actual",
       "currentStock": 18121.0,
       "targetCapaRatio": 1.694,
       "maxCapaRatio": 1.51,
@@ -761,6 +818,7 @@
     },
     {
       "date": "2026-02-24",
+      "dataType": "actual",
       "currentStock": 17448.0,
       "targetCapaRatio": 1.631,
       "maxCapaRatio": 1.454,
@@ -775,6 +833,7 @@
     },
     {
       "date": "2026-02-25",
+      "dataType": "actual",
       "currentStock": 16581.0,
       "targetCapaRatio": 1.55,
       "maxCapaRatio": 1.382,
@@ -789,6 +848,7 @@
     },
     {
       "date": "2026-02-26",
+      "dataType": "actual",
       "currentStock": 16112.0,
       "targetCapaRatio": 1.506,
       "maxCapaRatio": 1.343,
@@ -803,6 +863,7 @@
     },
     {
       "date": "2026-02-27",
+      "dataType": "actual",
       "currentStock": 15604.0,
       "targetCapaRatio": 1.458,
       "maxCapaRatio": 1.3,
@@ -817,6 +878,7 @@
     },
     {
       "date": "2026-02-28",
+      "dataType": "actual",
       "currentStock": 15096.0,
       "targetCapaRatio": 1.411,
       "maxCapaRatio": 1.258,
@@ -831,6 +893,7 @@
     },
     {
       "date": "2026-03-01",
+      "dataType": "actual",
       "currentStock": 15422.0,
       "targetCapaRatio": 1.441,
       "maxCapaRatio": 1.285,
@@ -845,6 +908,7 @@
     },
     {
       "date": "2026-03-02",
+      "dataType": "actual",
       "currentStock": 16326.0,
       "targetCapaRatio": 1.526,
       "maxCapaRatio": 1.361,
@@ -859,6 +923,7 @@
     },
     {
       "date": "2026-03-03",
+      "dataType": "actual",
       "currentStock": 16758.0,
       "targetCapaRatio": 1.566,
       "maxCapaRatio": 1.397,
@@ -873,6 +938,7 @@
     },
     {
       "date": "2026-03-04",
+      "dataType": "actual",
       "currentStock": 16286.0,
       "targetCapaRatio": 1.522,
       "maxCapaRatio": 1.357,
@@ -887,6 +953,7 @@
     },
     {
       "date": "2026-03-05",
+      "dataType": "actual",
       "currentStock": 15851.0,
       "targetCapaRatio": 1.481,
       "maxCapaRatio": 1.321,
@@ -901,6 +968,7 @@
     },
     {
       "date": "2026-03-06",
+      "dataType": "actual",
       "currentStock": 15394.0,
       "targetCapaRatio": 1.439,
       "maxCapaRatio": 1.283,
@@ -915,6 +983,7 @@
     },
     {
       "date": "2026-03-07",
+      "dataType": "actual",
       "currentStock": 15012.0,
       "targetCapaRatio": 1.403,
       "maxCapaRatio": 1.251,
@@ -929,6 +998,7 @@
     },
     {
       "date": "2026-03-08",
+      "dataType": "actual",
       "currentStock": 15206.0,
       "targetCapaRatio": 1.421,
       "maxCapaRatio": 1.267,
@@ -943,6 +1013,7 @@
     },
     {
       "date": "2026-03-09",
+      "dataType": "actual",
       "currentStock": 16040.0,
       "targetCapaRatio": 1.499,
       "maxCapaRatio": 1.337,
@@ -957,6 +1028,7 @@
     },
     {
       "date": "2026-03-10",
+      "dataType": "actual",
       "currentStock": 15910.0,
       "targetCapaRatio": 1.487,
       "maxCapaRatio": 1.326,
@@ -971,6 +1043,7 @@
     },
     {
       "date": "2026-03-11",
+      "dataType": "actual",
       "currentStock": 16080.0,
       "targetCapaRatio": 1.503,
       "maxCapaRatio": 1.34,
@@ -985,6 +1058,7 @@
     },
     {
       "date": "2026-03-12",
+      "dataType": "actual",
       "currentStock": 15217.0,
       "targetCapaRatio": 1.422,
       "maxCapaRatio": 1.268,
@@ -999,6 +1073,7 @@
     },
     {
       "date": "2026-03-13",
+      "dataType": "actual",
       "currentStock": 15323.0,
       "targetCapaRatio": 1.432,
       "maxCapaRatio": 1.277,
@@ -1013,6 +1088,7 @@
     },
     {
       "date": "2026-03-14",
+      "dataType": "actual",
       "currentStock": 15535.0,
       "targetCapaRatio": 1.452,
       "maxCapaRatio": 1.295,
@@ -1027,6 +1103,7 @@
     },
     {
       "date": "2026-03-15",
+      "dataType": "actual",
       "currentStock": 16107.0,
       "targetCapaRatio": 1.505,
       "maxCapaRatio": 1.342,
@@ -1041,6 +1118,7 @@
     },
     {
       "date": "2026-03-16",
+      "dataType": "actual",
       "currentStock": 16879.0,
       "targetCapaRatio": 1.577,
       "maxCapaRatio": 1.407,
@@ -1055,6 +1133,7 @@
     },
     {
       "date": "2026-03-17",
+      "dataType": "actual",
       "currentStock": 16713.0,
       "targetCapaRatio": 1.562,
       "maxCapaRatio": 1.393,
@@ -1069,6 +1148,7 @@
     },
     {
       "date": "2026-03-18",
+      "dataType": "actual",
       "currentStock": 16011.0,
       "targetCapaRatio": 1.496,
       "maxCapaRatio": 1.334,
@@ -1083,6 +1163,7 @@
     },
     {
       "date": "2026-03-19",
+      "dataType": "actual",
       "currentStock": 15148.0,
       "targetCapaRatio": 1.416,
       "maxCapaRatio": 1.262,
@@ -1097,6 +1178,7 @@
     },
     {
       "date": "2026-03-20",
+      "dataType": "actual",
       "currentStock": 14780.0,
       "targetCapaRatio": 1.381,
       "maxCapaRatio": 1.232,
@@ -1111,6 +1193,7 @@
     },
     {
       "date": "2026-03-21",
+      "dataType": "actual",
       "currentStock": 14957.0,
       "targetCapaRatio": 1.398,
       "maxCapaRatio": 1.246,
@@ -1125,6 +1208,7 @@
     },
     {
       "date": "2026-03-22",
+      "dataType": "actual",
       "currentStock": 15993.0,
       "targetCapaRatio": 1.495,
       "maxCapaRatio": 1.333,
@@ -1139,6 +1223,7 @@
     },
     {
       "date": "2026-03-23",
+      "dataType": "actual",
       "currentStock": 17408.0,
       "targetCapaRatio": 1.627,
       "maxCapaRatio": 1.451,
@@ -1153,6 +1238,7 @@
     },
     {
       "date": "2026-03-24",
+      "dataType": "actual",
       "currentStock": 17153.0,
       "targetCapaRatio": 1.603,
       "maxCapaRatio": 1.429,
@@ -1167,6 +1253,7 @@
     },
     {
       "date": "2026-03-25",
+      "dataType": "actual",
       "currentStock": 15951.0,
       "targetCapaRatio": 1.491,
       "maxCapaRatio": 1.329,
@@ -1181,6 +1268,7 @@
     },
     {
       "date": "2026-03-26",
+      "dataType": "actual",
       "currentStock": 14830.0,
       "targetCapaRatio": 1.386,
       "maxCapaRatio": 1.236,
@@ -1195,6 +1283,7 @@
     },
     {
       "date": "2026-03-27",
+      "dataType": "actual",
       "currentStock": 14744.0,
       "targetCapaRatio": 1.378,
       "maxCapaRatio": 1.229,
@@ -1209,6 +1298,7 @@
     },
     {
       "date": "2026-03-28",
+      "dataType": "actual",
       "currentStock": 14806.0,
       "targetCapaRatio": 1.384,
       "maxCapaRatio": 1.234,
@@ -1223,6 +1313,7 @@
     },
     {
       "date": "2026-03-29",
+      "dataType": "actual",
       "currentStock": 15084.0,
       "targetCapaRatio": 1.41,
       "maxCapaRatio": 1.257,
@@ -1237,6 +1328,7 @@
     },
     {
       "date": "2026-03-30",
+      "dataType": "actual",
       "currentStock": 16238.0,
       "targetCapaRatio": 1.518,
       "maxCapaRatio": 1.353,
@@ -1251,6 +1343,7 @@
     },
     {
       "date": "2026-03-31",
+      "dataType": "actual",
       "currentStock": 16220.0,
       "targetCapaRatio": 1.516,
       "maxCapaRatio": 1.352,
@@ -1265,6 +1358,7 @@
     },
     {
       "date": "2026-04-01",
+      "dataType": "actual",
       "currentStock": 16020.0,
       "targetCapaRatio": 1.497,
       "maxCapaRatio": 1.335,
@@ -1279,6 +1373,7 @@
     },
     {
       "date": "2026-04-02",
+      "dataType": "actual",
       "currentStock": 15786.0,
       "targetCapaRatio": 1.475,
       "maxCapaRatio": 1.315,
@@ -1293,6 +1388,7 @@
     },
     {
       "date": "2026-04-03",
+      "dataType": "actual",
       "currentStock": 15531.0,
       "targetCapaRatio": 1.451,
       "maxCapaRatio": 1.294,
@@ -1307,6 +1403,7 @@
     },
     {
       "date": "2026-04-04",
+      "dataType": "actual",
       "currentStock": 15968.0,
       "targetCapaRatio": 1.492,
       "maxCapaRatio": 1.331,
@@ -1321,6 +1418,7 @@
     },
     {
       "date": "2026-04-05",
+      "dataType": "actual",
       "currentStock": 16630.0,
       "targetCapaRatio": 1.554,
       "maxCapaRatio": 1.386,
@@ -1335,6 +1433,7 @@
     },
     {
       "date": "2026-04-06",
+      "dataType": "actual",
       "currentStock": 17163.0,
       "targetCapaRatio": 1.604,
       "maxCapaRatio": 1.43,
@@ -1349,6 +1448,7 @@
     },
     {
       "date": "2026-04-07",
+      "dataType": "actual",
       "currentStock": 16982.0,
       "targetCapaRatio": 1.587,
       "maxCapaRatio": 1.415,
@@ -1363,6 +1463,7 @@
     },
     {
       "date": "2026-04-08",
+      "dataType": "actual",
       "currentStock": 16258.0,
       "targetCapaRatio": 1.519,
       "maxCapaRatio": 1.355,
@@ -1377,6 +1478,7 @@
     },
     {
       "date": "2026-04-09",
+      "dataType": "actual",
       "currentStock": 15378.0,
       "targetCapaRatio": 1.437,
       "maxCapaRatio": 1.282,
@@ -1391,6 +1493,7 @@
     },
     {
       "date": "2026-04-10",
+      "dataType": "actual",
       "currentStock": 15703.0,
       "targetCapaRatio": 1.468,
       "maxCapaRatio": 1.309,
@@ -1405,6 +1508,7 @@
     },
     {
       "date": "2026-04-11",
+      "dataType": "actual",
       "currentStock": 15942.0,
       "targetCapaRatio": 1.49,
       "maxCapaRatio": 1.329,
@@ -1419,6 +1523,7 @@
     },
     {
       "date": "2026-04-12",
+      "dataType": "actual",
       "currentStock": 16787.0,
       "targetCapaRatio": 1.569,
       "maxCapaRatio": 1.399,
@@ -1433,6 +1538,7 @@
     },
     {
       "date": "2026-04-13",
+      "dataType": "actual",
       "currentStock": 17835.0,
       "targetCapaRatio": 1.667,
       "maxCapaRatio": 1.486,
@@ -1447,6 +1553,7 @@
     },
     {
       "date": "2026-04-14",
+      "dataType": "actual",
       "currentStock": 17482.0,
       "targetCapaRatio": 1.634,
       "maxCapaRatio": 1.457,
@@ -1461,6 +1568,7 @@
     },
     {
       "date": "2026-04-15",
+      "dataType": "actual",
       "currentStock": 16328.0,
       "targetCapaRatio": 1.526,
       "maxCapaRatio": 1.361,
@@ -1475,6 +1583,7 @@
     },
     {
       "date": "2026-04-16",
+      "dataType": "actual",
       "currentStock": 15206.0,
       "targetCapaRatio": 1.421,
       "maxCapaRatio": 1.267,
@@ -1489,6 +1598,7 @@
     },
     {
       "date": "2026-04-17",
+      "dataType": "actual",
       "currentStock": 14921.0,
       "targetCapaRatio": 1.394,
       "maxCapaRatio": 1.243,
@@ -1503,6 +1613,7 @@
     },
     {
       "date": "2026-04-18",
+      "dataType": "actual",
       "currentStock": 15574.0,
       "targetCapaRatio": 1.456,
       "maxCapaRatio": 1.298,
@@ -1517,6 +1628,7 @@
     },
     {
       "date": "2026-04-19",
+      "dataType": "actual",
       "currentStock": 15953.0,
       "targetCapaRatio": 1.491,
       "maxCapaRatio": 1.329,
@@ -1531,6 +1643,7 @@
     },
     {
       "date": "2026-04-20",
+      "dataType": "actual",
       "currentStock": 16807.0,
       "targetCapaRatio": 1.571,
       "maxCapaRatio": 1.401,
@@ -1545,6 +1658,7 @@
     },
     {
       "date": "2026-04-21",
+      "dataType": "actual",
       "currentStock": 16749.0,
       "targetCapaRatio": 1.565,
       "maxCapaRatio": 1.396,
@@ -1559,6 +1673,7 @@
     },
     {
       "date": "2026-04-22",
+      "dataType": "actual",
       "currentStock": 15653.0,
       "targetCapaRatio": 1.463,
       "maxCapaRatio": 1.304,
@@ -1573,6 +1688,7 @@
     },
     {
       "date": "2026-04-23",
+      "dataType": "actual",
       "currentStock": 14408.0,
       "targetCapaRatio": 1.347,
       "maxCapaRatio": 1.201,
@@ -1587,6 +1703,7 @@
     },
     {
       "date": "2026-04-24",
+      "dataType": "actual",
       "currentStock": 14114.0,
       "targetCapaRatio": 1.319,
       "maxCapaRatio": 1.176,
@@ -1601,6 +1718,7 @@
     },
     {
       "date": "2026-04-25",
+      "dataType": "actual",
       "currentStock": 13907.0,
       "targetCapaRatio": 1.3,
       "maxCapaRatio": 1.159,
@@ -1615,6 +1733,7 @@
     },
     {
       "date": "2026-04-26",
+      "dataType": "actual",
       "currentStock": 14376.0,
       "targetCapaRatio": 1.344,
       "maxCapaRatio": 1.198,
@@ -1629,6 +1748,7 @@
     },
     {
       "date": "2026-04-27",
+      "dataType": "actual",
       "currentStock": 15792.0,
       "targetCapaRatio": 1.476,
       "maxCapaRatio": 1.316,
@@ -1643,6 +1763,7 @@
     },
     {
       "date": "2026-04-28",
+      "dataType": "actual",
       "currentStock": 15716.0,
       "targetCapaRatio": 1.469,
       "maxCapaRatio": 1.31,
@@ -1657,6 +1778,7 @@
     },
     {
       "date": "2026-04-29",
+      "dataType": "actual",
       "currentStock": 14432.0,
       "targetCapaRatio": 1.349,
       "maxCapaRatio": 1.203,
@@ -1671,6 +1793,7 @@
     },
     {
       "date": "2026-04-30",
+      "dataType": "actual",
       "currentStock": 13392.0,
       "targetCapaRatio": 1.252,
       "maxCapaRatio": 1.116,
@@ -1685,6 +1808,7 @@
     },
     {
       "date": "2026-05-01",
+      "dataType": "actual",
       "currentStock": 13176.0,
       "targetCapaRatio": 1.231,
       "maxCapaRatio": 1.098,
@@ -1699,6 +1823,7 @@
     },
     {
       "date": "2026-05-02",
+      "dataType": "actual",
       "currentStock": 14283.0,
       "targetCapaRatio": 1.335,
       "maxCapaRatio": 1.19,
@@ -1713,6 +1838,7 @@
     },
     {
       "date": "2026-05-03",
+      "dataType": "actual",
       "currentStock": 15069.0,
       "targetCapaRatio": 1.408,
       "maxCapaRatio": 1.256,
@@ -1727,6 +1853,7 @@
     },
     {
       "date": "2026-05-04",
+      "dataType": "actual",
       "currentStock": 16285.0,
       "targetCapaRatio": 1.522,
       "maxCapaRatio": 1.357,
@@ -1741,6 +1868,7 @@
     },
     {
       "date": "2026-05-05",
+      "dataType": "actual",
       "currentStock": 16043.0,
       "targetCapaRatio": 1.499,
       "maxCapaRatio": 1.337,
@@ -1755,6 +1883,7 @@
     },
     {
       "date": "2026-05-06",
+      "dataType": "actual",
       "currentStock": 15894.0,
       "targetCapaRatio": 1.485,
       "maxCapaRatio": 1.325,
@@ -1769,6 +1898,7 @@
     },
     {
       "date": "2026-05-07",
+      "dataType": "actual",
       "currentStock": 15022.0,
       "targetCapaRatio": 1.404,
       "maxCapaRatio": 1.252,
@@ -1783,6 +1913,7 @@
     },
     {
       "date": "2026-05-08",
+      "dataType": "actual",
       "currentStock": 15167.0,
       "targetCapaRatio": 1.417,
       "maxCapaRatio": 1.264,
@@ -1797,6 +1928,7 @@
     },
     {
       "date": "2026-05-09",
+      "dataType": "actual",
       "currentStock": 15111.0,
       "targetCapaRatio": 1.412,
       "maxCapaRatio": 1.259,
@@ -1811,6 +1943,7 @@
     },
     {
       "date": "2026-05-10",
+      "dataType": "actual",
       "currentStock": 15724.0,
       "targetCapaRatio": 1.47,
       "maxCapaRatio": 1.31,
@@ -1825,6 +1958,7 @@
     },
     {
       "date": "2026-05-11",
+      "dataType": "actual",
       "currentStock": 16872.0,
       "targetCapaRatio": 1.577,
       "maxCapaRatio": 1.406,
@@ -1839,6 +1973,7 @@
     },
     {
       "date": "2026-05-12",
+      "dataType": "actual",
       "currentStock": 16305.0,
       "targetCapaRatio": 1.524,
       "maxCapaRatio": 1.359,
@@ -1853,6 +1988,7 @@
     },
     {
       "date": "2026-05-13",
+      "dataType": "actual",
       "currentStock": 16200.0,
       "targetCapaRatio": 1.514,
       "maxCapaRatio": 1.35,
@@ -1867,6 +2003,7 @@
     },
     {
       "date": "2026-05-14",
+      "dataType": "actual",
       "currentStock": 15794.0,
       "targetCapaRatio": 1.476,
       "maxCapaRatio": 1.316,
@@ -1881,6 +2018,7 @@
     },
     {
       "date": "2026-05-15",
+      "dataType": "actual",
       "currentStock": 15608.0,
       "targetCapaRatio": 1.459,
       "maxCapaRatio": 1.301,
@@ -1895,6 +2033,7 @@
     },
     {
       "date": "2026-05-16",
+      "dataType": "actual",
       "currentStock": 15625.0,
       "targetCapaRatio": 1.46,
       "maxCapaRatio": 1.302,
@@ -1909,6 +2048,7 @@
     },
     {
       "date": "2026-05-17",
+      "dataType": "actual",
       "currentStock": 16777.0,
       "targetCapaRatio": 1.568,
       "maxCapaRatio": 1.398,
@@ -1923,6 +2063,7 @@
     },
     {
       "date": "2026-05-18",
+      "dataType": "actual",
       "currentStock": 18099.0,
       "targetCapaRatio": 1.691,
       "maxCapaRatio": 1.508,
@@ -1937,6 +2078,7 @@
     },
     {
       "date": "2026-05-19",
+      "dataType": "actual",
       "currentStock": 18005.0,
       "targetCapaRatio": 1.683,
       "maxCapaRatio": 1.5,
@@ -1951,6 +2093,7 @@
     },
     {
       "date": "2026-05-20",
+      "dataType": "actual",
       "currentStock": 16686.0,
       "targetCapaRatio": 1.559,
       "maxCapaRatio": 1.391,
@@ -1965,6 +2108,7 @@
     },
     {
       "date": "2026-05-21",
+      "dataType": "actual",
       "currentStock": 15769.0,
       "targetCapaRatio": 1.474,
       "maxCapaRatio": 1.314,
@@ -1979,6 +2123,7 @@
     },
     {
       "date": "2026-05-22",
+      "dataType": "actual",
       "currentStock": 15172.0,
       "targetCapaRatio": 1.418,
       "maxCapaRatio": 1.264,
@@ -1993,6 +2138,7 @@
     },
     {
       "date": "2026-05-23",
+      "dataType": "actual",
       "currentStock": 14704.0,
       "targetCapaRatio": 1.374,
       "maxCapaRatio": 1.225,
@@ -2007,6 +2153,7 @@
     },
     {
       "date": "2026-05-24",
+      "dataType": "actual",
       "currentStock": 15793.0,
       "targetCapaRatio": 1.476,
       "maxCapaRatio": 1.316,
@@ -2021,6 +2168,7 @@
     },
     {
       "date": "2026-05-25",
+      "dataType": "actual",
       "currentStock": 16699.0,
       "targetCapaRatio": 1.561,
       "maxCapaRatio": 1.392,
@@ -2035,6 +2183,7 @@
     },
     {
       "date": "2026-05-26",
+      "dataType": "actual",
       "currentStock": 17064.0,
       "targetCapaRatio": 1.595,
       "maxCapaRatio": 1.422,
@@ -2049,6 +2198,7 @@
     },
     {
       "date": "2026-05-27",
+      "dataType": "actual",
       "currentStock": 16605.0,
       "targetCapaRatio": 1.552,
       "maxCapaRatio": 1.384,
@@ -2063,6 +2213,7 @@
     },
     {
       "date": "2026-05-28",
+      "dataType": "actual",
       "currentStock": 15378.0,
       "targetCapaRatio": 1.437,
       "maxCapaRatio": 1.282,
@@ -2077,6 +2228,7 @@
     },
     {
       "date": "2026-05-29",
+      "dataType": "actual",
       "currentStock": 14884.0,
       "targetCapaRatio": 1.391,
       "maxCapaRatio": 1.24,
@@ -2091,6 +2243,7 @@
     },
     {
       "date": "2026-05-30",
+      "dataType": "actual",
       "currentStock": 14405.0,
       "targetCapaRatio": 1.346,
       "maxCapaRatio": 1.2,
@@ -2105,6 +2258,7 @@
     },
     {
       "date": "2026-05-31",
+      "dataType": "actual",
       "currentStock": 15201.0,
       "targetCapaRatio": 1.421,
       "maxCapaRatio": 1.267,
@@ -2119,6 +2273,7 @@
     },
     {
       "date": "2026-06-01",
+      "dataType": "actual",
       "currentStock": 16034.0,
       "targetCapaRatio": 1.499,
       "maxCapaRatio": 1.336,
@@ -2133,6 +2288,7 @@
     },
     {
       "date": "2026-06-02",
+      "dataType": "actual",
       "currentStock": 16221.0,
       "targetCapaRatio": 1.516,
       "maxCapaRatio": 1.352,
@@ -2147,6 +2303,7 @@
     },
     {
       "date": "2026-06-03",
+      "dataType": "actual",
       "currentStock": 15230.0,
       "targetCapaRatio": 1.423,
       "maxCapaRatio": 1.269,
@@ -2161,6 +2318,7 @@
     },
     {
       "date": "2026-06-04",
+      "dataType": "actual",
       "currentStock": 14835.0,
       "targetCapaRatio": 1.386,
       "maxCapaRatio": 1.236,
@@ -2175,6 +2333,7 @@
     },
     {
       "date": "2026-06-05",
+      "dataType": "actual",
       "currentStock": 14914.0,
       "targetCapaRatio": 1.394,
       "maxCapaRatio": 1.243,
@@ -2189,6 +2348,7 @@
     },
     {
       "date": "2026-06-06",
+      "dataType": "actual",
       "currentStock": 14988.0,
       "targetCapaRatio": 1.401,
       "maxCapaRatio": 1.249,
@@ -2203,6 +2363,7 @@
     },
     {
       "date": "2026-06-07",
+      "dataType": "actual",
       "currentStock": 15525.0,
       "targetCapaRatio": 1.451,
       "maxCapaRatio": 1.294,
@@ -2217,6 +2378,7 @@
     },
     {
       "date": "2026-06-08",
+      "dataType": "actual",
       "currentStock": 16621.0,
       "targetCapaRatio": 1.553,
       "maxCapaRatio": 1.385,
@@ -2231,6 +2393,7 @@
     },
     {
       "date": "2026-06-09",
+      "dataType": "actual",
       "currentStock": 16575.0,
       "targetCapaRatio": 1.549,
       "maxCapaRatio": 1.381,
@@ -2245,6 +2408,7 @@
     },
     {
       "date": "2026-06-10",
+      "dataType": "actual",
       "currentStock": 16391.0,
       "targetCapaRatio": 1.532,
       "maxCapaRatio": 1.366,
@@ -2259,6 +2423,7 @@
     },
     {
       "date": "2026-06-11",
+      "dataType": "actual",
       "currentStock": 15642.0,
       "targetCapaRatio": 1.462,
       "maxCapaRatio": 1.304,
@@ -2273,6 +2438,7 @@
     },
     {
       "date": "2026-06-12",
+      "dataType": "actual",
       "currentStock": 15937.0,
       "targetCapaRatio": 1.489,
       "maxCapaRatio": 1.328,
@@ -2287,6 +2453,7 @@
     },
     {
       "date": "2026-06-13",
+      "dataType": "actual",
       "currentStock": 15905.0,
       "targetCapaRatio": 1.486,
       "maxCapaRatio": 1.325,
@@ -2301,6 +2468,7 @@
     },
     {
       "date": "2026-06-14",
+      "dataType": "actual",
       "currentStock": 16529.0,
       "targetCapaRatio": 1.545,
       "maxCapaRatio": 1.377,
@@ -2315,6 +2483,7 @@
     },
     {
       "date": "2026-06-15",
+      "dataType": "actual",
       "currentStock": 17460.0,
       "targetCapaRatio": 1.632,
       "maxCapaRatio": 1.455,
@@ -2329,6 +2498,7 @@
     },
     {
       "date": "2026-06-16",
+      "dataType": "actual",
       "currentStock": 17272.0,
       "targetCapaRatio": 1.614,
       "maxCapaRatio": 1.439,
@@ -2343,6 +2513,7 @@
     },
     {
       "date": "2026-06-17",
+      "dataType": "actual",
       "currentStock": 16601.0,
       "targetCapaRatio": 1.551,
       "maxCapaRatio": 1.383,
@@ -2357,6 +2528,7 @@
     },
     {
       "date": "2026-06-18",
+      "dataType": "actual",
       "currentStock": 15214.0,
       "targetCapaRatio": 1.422,
       "maxCapaRatio": 1.268,
@@ -2371,6 +2543,7 @@
     },
     {
       "date": "2026-06-19",
+      "dataType": "actual",
       "currentStock": 15072.0,
       "targetCapaRatio": 1.409,
       "maxCapaRatio": 1.256,
@@ -2385,6 +2558,7 @@
     },
     {
       "date": "2026-06-20",
+      "dataType": "actual",
       "currentStock": 14663.0,
       "targetCapaRatio": 1.37,
       "maxCapaRatio": 1.222,
@@ -2399,6 +2573,7 @@
     },
     {
       "date": "2026-06-21",
+      "dataType": "actual",
       "currentStock": 15385.0,
       "targetCapaRatio": 1.438,
       "maxCapaRatio": 1.282,
@@ -2413,6 +2588,7 @@
     },
     {
       "date": "2026-06-22",
+      "dataType": "actual",
       "currentStock": 16675.0,
       "targetCapaRatio": 1.558,
       "maxCapaRatio": 1.39,
@@ -2427,6 +2603,7 @@
     },
     {
       "date": "2026-06-23",
+      "dataType": "actual",
       "currentStock": 16229.0,
       "targetCapaRatio": 1.517,
       "maxCapaRatio": 1.352,
@@ -2441,6 +2618,7 @@
     },
     {
       "date": "2026-06-24",
+      "dataType": "actual",
       "currentStock": 15191.0,
       "targetCapaRatio": 1.42,
       "maxCapaRatio": 1.266,
@@ -2455,6 +2633,7 @@
     },
     {
       "date": "2026-06-25",
+      "dataType": "actual",
       "currentStock": 14284.0,
       "targetCapaRatio": 1.335,
       "maxCapaRatio": 1.19,
@@ -2469,6 +2648,7 @@
     },
     {
       "date": "2026-06-26",
+      "dataType": "actual",
       "currentStock": 14240.0,
       "targetCapaRatio": 1.331,
       "maxCapaRatio": 1.187,
@@ -2483,6 +2663,7 @@
     },
     {
       "date": "2026-06-27",
+      "dataType": "actual",
       "currentStock": 15192.0,
       "targetCapaRatio": 1.42,
       "maxCapaRatio": 1.266,
@@ -2497,6 +2678,7 @@
     },
     {
       "date": "2026-06-28",
+      "dataType": "actual",
       "currentStock": 15944.0,
       "targetCapaRatio": 1.49,
       "maxCapaRatio": 1.329,
@@ -2511,6 +2693,7 @@
     },
     {
       "date": "2026-06-29",
+      "dataType": "actual",
       "currentStock": 16834.0,
       "targetCapaRatio": 1.573,
       "maxCapaRatio": 1.403,
@@ -2525,6 +2708,7 @@
     },
     {
       "date": "2026-06-30",
+      "dataType": "actual",
       "currentStock": 16685.0,
       "targetCapaRatio": 1.559,
       "maxCapaRatio": 1.39,
@@ -2539,6 +2723,7 @@
     },
     {
       "date": "2026-07-01",
+      "dataType": "actual",
       "currentStock": 16517.0,
       "targetCapaRatio": 1.544,
       "maxCapaRatio": 1.376,
@@ -2553,6 +2738,7 @@
     },
     {
       "date": "2026-07-02",
+      "dataType": "actual",
       "currentStock": 16474.0,
       "targetCapaRatio": 1.54,
       "maxCapaRatio": 1.373,
@@ -2567,6 +2753,7 @@
     },
     {
       "date": "2026-07-03",
+      "dataType": "actual",
       "currentStock": 16527.0,
       "targetCapaRatio": 1.545,
       "maxCapaRatio": 1.377,
@@ -2581,6 +2768,7 @@
     },
     {
       "date": "2026-07-04",
+      "dataType": "actual",
       "currentStock": 16607.0,
       "targetCapaRatio": 1.552,
       "maxCapaRatio": 1.384,
@@ -2595,6 +2783,7 @@
     },
     {
       "date": "2026-07-05",
+      "dataType": "actual",
       "currentStock": 17332.0,
       "targetCapaRatio": 1.62,
       "maxCapaRatio": 1.444,
@@ -2609,6 +2798,7 @@
     },
     {
       "date": "2026-07-06",
+      "dataType": "actual",
       "currentStock": 18599.0,
       "targetCapaRatio": 1.738,
       "maxCapaRatio": 1.55,
@@ -2623,6 +2813,7 @@
     },
     {
       "date": "2026-07-07",
+      "dataType": "actual",
       "currentStock": 18067.0,
       "targetCapaRatio": 1.689,
       "maxCapaRatio": 1.506,
@@ -2637,6 +2828,7 @@
     },
     {
       "date": "2026-07-08",
+      "dataType": "actual",
       "currentStock": 17044.0,
       "targetCapaRatio": 1.593,
       "maxCapaRatio": 1.42,
@@ -2651,6 +2843,7 @@
     },
     {
       "date": "2026-07-09",
+      "dataType": "actual",
       "currentStock": 16091.0,
       "targetCapaRatio": 1.504,
       "maxCapaRatio": 1.341,
@@ -2665,6 +2858,7 @@
     },
     {
       "date": "2026-07-10",
+      "dataType": "actual",
       "currentStock": 16215.0,
       "targetCapaRatio": 1.515,
       "maxCapaRatio": 1.351,
@@ -2679,6 +2873,7 @@
     },
     {
       "date": "2026-07-11",
+      "dataType": "actual",
       "currentStock": 16556.0,
       "targetCapaRatio": 1.547,
       "maxCapaRatio": 1.38,
@@ -2693,6 +2888,7 @@
     },
     {
       "date": "2026-07-12",
+      "dataType": "actual",
       "currentStock": 17237.0,
       "targetCapaRatio": 1.611,
       "maxCapaRatio": 1.436,
@@ -2707,6 +2903,7 @@
     },
     {
       "date": "2026-07-13",
+      "dataType": "actual",
       "currentStock": 17724.0,
       "targetCapaRatio": 1.656,
       "maxCapaRatio": 1.477,
@@ -2721,6 +2918,7 @@
     },
     {
       "date": "2026-07-14",
+      "dataType": "actual",
       "currentStock": 17528.0,
       "targetCapaRatio": 1.638,
       "maxCapaRatio": 1.461,
@@ -2735,6 +2933,7 @@
     },
     {
       "date": "2026-07-15",
+      "dataType": "actual",
       "currentStock": 17130.0,
       "targetCapaRatio": 1.601,
       "maxCapaRatio": 1.427,
@@ -2749,6 +2948,7 @@
     },
     {
       "date": "2026-07-16",
+      "dataType": "actual",
       "currentStock": 16841.0,
       "targetCapaRatio": 1.574,
       "maxCapaRatio": 1.403,
@@ -2763,6 +2963,7 @@
     },
     {
       "date": "2026-07-17",
+      "dataType": "actual",
       "currentStock": 16663.0,
       "targetCapaRatio": 1.557,
       "maxCapaRatio": 1.389,
@@ -2777,6 +2978,7 @@
     },
     {
       "date": "2026-07-18",
+      "dataType": "actual",
       "currentStock": 16715.0,
       "targetCapaRatio": 1.562,
       "maxCapaRatio": 1.393,
@@ -2791,6 +2993,7 @@
     },
     {
       "date": "2026-07-19",
+      "dataType": "actual",
       "currentStock": 17124.0,
       "targetCapaRatio": 1.6,
       "maxCapaRatio": 1.427,
@@ -2805,6 +3008,7 @@
     },
     {
       "date": "2026-07-20",
+      "dataType": "actual",
       "currentStock": 18333.0,
       "targetCapaRatio": 1.713,
       "maxCapaRatio": 1.528,
@@ -2819,6 +3023,7 @@
     },
     {
       "date": "2026-07-21",
+      "dataType": "actual",
       "currentStock": 17556.0,
       "targetCapaRatio": 1.641,
       "maxCapaRatio": 1.463,
@@ -2833,6 +3038,7 @@
     },
     {
       "date": "2026-07-22",
+      "dataType": "actual",
       "currentStock": 16491.0,
       "targetCapaRatio": 1.541,
       "maxCapaRatio": 1.374,
@@ -2847,6 +3053,7 @@
     },
     {
       "date": "2026-07-23",
+      "dataType": "actual",
       "currentStock": 15260.0,
       "targetCapaRatio": 1.426,
       "maxCapaRatio": 1.272,
@@ -2861,6 +3068,7 @@
     },
     {
       "date": "2026-07-24",
+      "dataType": "actual",
       "currentStock": 15048.0,
       "targetCapaRatio": 1.406,
       "maxCapaRatio": 1.254,
@@ -2875,6 +3083,7 @@
     },
     {
       "date": "2026-07-25",
+      "dataType": "actual",
       "currentStock": 14781.0,
       "targetCapaRatio": 1.381,
       "maxCapaRatio": 1.232,
@@ -2889,6 +3098,7 @@
     },
     {
       "date": "2026-07-26",
+      "dataType": "actual",
       "currentStock": 15661.0,
       "targetCapaRatio": 1.464,
       "maxCapaRatio": 1.305,
@@ -2903,6 +3113,7 @@
     },
     {
       "date": "2026-07-27",
+      "dataType": "actual",
       "currentStock": 16838.0,
       "targetCapaRatio": 1.574,
       "maxCapaRatio": 1.403,
@@ -2917,6 +3128,7 @@
     },
     {
       "date": "2026-07-28",
+      "dataType": "actual",
       "currentStock": 16749.0,
       "targetCapaRatio": 1.565,
       "maxCapaRatio": 1.396,
@@ -2931,6 +3143,7 @@
     },
     {
       "date": "2026-07-29",
+      "dataType": "actual",
       "currentStock": 15922.0,
       "targetCapaRatio": 1.488,
       "maxCapaRatio": 1.327,
@@ -2945,6 +3158,7 @@
     },
     {
       "date": "2026-07-30",
+      "dataType": "actual",
       "currentStock": 14827.0,
       "targetCapaRatio": 1.386,
       "maxCapaRatio": 1.236,
@@ -2959,6 +3173,7 @@
     },
     {
       "date": "2026-07-31",
+      "dataType": "actual",
       "currentStock": 14758.0,
       "targetCapaRatio": 1.379,
       "maxCapaRatio": 1.23,
@@ -2973,6 +3188,7 @@
     },
     {
       "date": "2026-08-01",
+      "dataType": "actual",
       "currentStock": 14614.0,
       "targetCapaRatio": 1.366,
       "maxCapaRatio": 1.218,
@@ -2987,6 +3203,7 @@
     },
     {
       "date": "2026-08-02",
+      "dataType": "actual",
       "currentStock": 15307.0,
       "targetCapaRatio": 1.431,
       "maxCapaRatio": 1.276,
@@ -3001,6 +3218,7 @@
     },
     {
       "date": "2026-08-03",
+      "dataType": "actual",
       "currentStock": 16531.0,
       "targetCapaRatio": 1.545,
       "maxCapaRatio": 1.378,
@@ -3015,6 +3233,7 @@
     },
     {
       "date": "2026-08-04",
+      "dataType": "actual",
       "currentStock": 16652.0,
       "targetCapaRatio": 1.556,
       "maxCapaRatio": 1.388,
@@ -3029,6 +3248,7 @@
     },
     {
       "date": "2026-08-05",
+      "dataType": "actual",
       "currentStock": 16026.0,
       "targetCapaRatio": 1.498,
       "maxCapaRatio": 1.335,
@@ -3043,6 +3263,7 @@
     },
     {
       "date": "2026-08-06",
+      "dataType": "actual",
       "currentStock": 15853.0,
       "targetCapaRatio": 1.482,
       "maxCapaRatio": 1.321,
@@ -3057,6 +3278,7 @@
     },
     {
       "date": "2026-08-07",
+      "dataType": "actual",
       "currentStock": 15882.0,
       "targetCapaRatio": 1.484,
       "maxCapaRatio": 1.323,
@@ -3071,6 +3293,7 @@
     },
     {
       "date": "2026-08-08",
+      "dataType": "actual",
       "currentStock": 16537.0,
       "targetCapaRatio": 1.546,
       "maxCapaRatio": 1.378,
@@ -3085,6 +3308,7 @@
     },
     {
       "date": "2026-08-09",
+      "dataType": "actual",
       "currentStock": 15444.0,
       "targetCapaRatio": 1.443,
       "maxCapaRatio": 1.287,
@@ -3099,6 +3323,7 @@
     },
     {
       "date": "2026-08-10",
+      "dataType": "actual",
       "currentStock": 16728.0,
       "targetCapaRatio": 1.563,
       "maxCapaRatio": 1.394,
@@ -3113,6 +3338,7 @@
     },
     {
       "date": "2026-08-11",
+      "dataType": "actual",
       "currentStock": 15901.0,
       "targetCapaRatio": 1.486,
       "maxCapaRatio": 1.325,
@@ -3127,6 +3353,7 @@
     },
     {
       "date": "2026-08-12",
+      "dataType": "actual",
       "currentStock": 15637.0,
       "targetCapaRatio": 1.461,
       "maxCapaRatio": 1.303,
@@ -3141,6 +3368,7 @@
     },
     {
       "date": "2026-08-13",
+      "dataType": "actual",
       "currentStock": 14821.0,
       "targetCapaRatio": 1.385,
       "maxCapaRatio": 1.235,
@@ -3155,6 +3383,7 @@
     },
     {
       "date": "2026-08-14",
+      "dataType": "forecast",
       "currentStock": 14752.0,
       "targetCapaRatio": 1.379,
       "maxCapaRatio": 1.229,
@@ -3169,6 +3398,7 @@
     },
     {
       "date": "2026-08-15",
+      "dataType": "forecast",
       "currentStock": 14683.0,
       "targetCapaRatio": 1.372,
       "maxCapaRatio": 1.224,
@@ -3183,6 +3413,7 @@
     },
     {
       "date": "2026-08-16",
+      "dataType": "forecast",
       "currentStock": 15334.0,
       "targetCapaRatio": 1.433,
       "maxCapaRatio": 1.278,
@@ -3197,6 +3428,7 @@
     },
     {
       "date": "2026-08-17",
+      "dataType": "forecast",
       "currentStock": 16362.0,
       "targetCapaRatio": 1.529,
       "maxCapaRatio": 1.363,
@@ -3211,6 +3443,7 @@
     },
     {
       "date": "2026-08-18",
+      "dataType": "forecast",
       "currentStock": 16286.0,
       "targetCapaRatio": 1.522,
       "maxCapaRatio": 1.357,
@@ -3225,6 +3458,7 @@
     },
     {
       "date": "2026-08-19",
+      "dataType": "forecast",
       "currentStock": 15510.0,
       "targetCapaRatio": 1.45,
       "maxCapaRatio": 1.292,
@@ -3239,6 +3473,7 @@
     },
     {
       "date": "2026-08-20",
+      "dataType": "forecast",
       "currentStock": 14484.0,
       "targetCapaRatio": 1.354,
       "maxCapaRatio": 1.207,
@@ -3253,6 +3488,7 @@
     },
     {
       "date": "2026-08-21",
+      "dataType": "forecast",
       "currentStock": 14408.0,
       "targetCapaRatio": 1.347,
       "maxCapaRatio": 1.201,
@@ -3267,6 +3503,7 @@
     },
     {
       "date": "2026-08-22",
+      "dataType": "forecast",
       "currentStock": 14332.0,
       "targetCapaRatio": 1.339,
       "maxCapaRatio": 1.194,
@@ -3281,6 +3518,7 @@
     },
     {
       "date": "2026-08-23",
+      "dataType": "forecast",
       "currentStock": 14975.0,
       "targetCapaRatio": 1.4,
       "maxCapaRatio": 1.248,
@@ -3295,6 +3533,7 @@
     },
     {
       "date": "2026-08-24",
+      "dataType": "forecast",
       "currentStock": 16112.0,
       "targetCapaRatio": 1.506,
       "maxCapaRatio": 1.343,
@@ -3309,6 +3548,7 @@
     },
     {
       "date": "2026-08-25",
+      "dataType": "forecast",
       "currentStock": 15970.0,
       "targetCapaRatio": 1.493,
       "maxCapaRatio": 1.331,
@@ -3323,6 +3563,7 @@
     },
     {
       "date": "2026-08-26",
+      "dataType": "forecast",
       "currentStock": 15128.0,
       "targetCapaRatio": 1.414,
       "maxCapaRatio": 1.261,
@@ -3337,6 +3578,7 @@
     },
     {
       "date": "2026-08-27",
+      "dataType": "forecast",
       "currentStock": 14036.0,
       "targetCapaRatio": 1.312,
       "maxCapaRatio": 1.17,
@@ -3351,6 +3593,7 @@
     },
     {
       "date": "2026-08-28",
+      "dataType": "forecast",
       "currentStock": 13894.0,
       "targetCapaRatio": 1.299,
       "maxCapaRatio": 1.158,
@@ -3365,6 +3608,7 @@
     },
     {
       "date": "2026-08-29",
+      "dataType": "forecast",
       "currentStock": 13752.0,
       "targetCapaRatio": 1.285,
       "maxCapaRatio": 1.146,
@@ -3379,6 +3623,7 @@
     },
     {
       "date": "2026-08-30",
+      "dataType": "forecast",
       "currentStock": 14243.0,
       "targetCapaRatio": 1.331,
       "maxCapaRatio": 1.187,
@@ -3393,6 +3638,7 @@
     },
     {
       "date": "2026-08-31",
+      "dataType": "forecast",
       "currentStock": 15195.0,
       "targetCapaRatio": 1.42,
       "maxCapaRatio": 1.266,
