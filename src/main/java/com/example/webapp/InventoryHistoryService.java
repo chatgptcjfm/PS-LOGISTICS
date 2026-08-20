@@ -7,7 +7,8 @@ import jakarta.annotation.PostConstruct;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
-import java.sql.Timestamp;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
@@ -85,15 +86,35 @@ public class InventoryHistoryService {
             item.put("sheetName", resultSet.getString("sheet_name"));
             item.put("uploadedAt", resultSet.getTimestamp("uploaded_at").toLocalDateTime().toString());
             item.put("asOfDate", resultSet.getDate("as_of_date") == null ? null : resultSet.getDate("as_of_date").toLocalDate().toString());
-            item.put("totalWeightKg", resultSet.getBigDecimal("total_weight_kg"));
-            item.put("totalWeightTon", resultSet.getBigDecimal("total_weight_ton"));
+            item.put("totalWeightKg", roundedNumber(resultSet.getBigDecimal("total_weight_kg")));
+            item.put("totalWeightTon", roundedNumber(resultSet.getBigDecimal("total_weight_ton")));
             try {
-                item.put("payload", objectMapper.readValue(resultSet.getString("payload_json"), new TypeReference<Map<String, Object>>() {}));
+                Map<String, Object> payload = objectMapper.readValue(resultSet.getString("payload_json"), new TypeReference<Map<String, Object>>() {});
+                item.put("payload", roundNumbers(payload));
             } catch (JsonProcessingException exception) {
                 throw new IllegalStateException("저장된 업로드 결과를 읽지 못했습니다. id=" + resultSet.getLong("id"), exception);
             }
             return item;
         });
+    }
+
+    private static BigDecimal roundedNumber(BigDecimal value) {
+        return value == null ? null : value.setScale(0, RoundingMode.HALF_UP);
+    }
+
+    private static Object roundNumbers(Object value) {
+        if (value instanceof Map<?, ?> source) {
+            Map<String, Object> result = new LinkedHashMap<>();
+            source.forEach((key, item) -> result.put(String.valueOf(key), roundNumbers(item)));
+            return result;
+        }
+        if (value instanceof List<?> source) {
+            return source.stream().map(InventoryHistoryService::roundNumbers).toList();
+        }
+        if (value instanceof Number number) {
+            return BigDecimal.valueOf(number.doubleValue()).setScale(0, RoundingMode.HALF_UP).intValue();
+        }
+        return value;
     }
 
     private static String trimFilename(String filename) {
