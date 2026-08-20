@@ -37,7 +37,8 @@ Java 17, Spring Boot, MariaDB 기반 웹 프로젝트의 로컬 샌드박스입�
 - 상품(S) 품목 중 시장 코드가 다른 8건은 업무 규칙에 따라 내수로 집계
 - 적정 CAPA `10,700 TON`, MAX CAPA `12,000 TON` 고정 기준
 - 품목형 WMS 업로드 결과의 유형별·시장별·유형×시장 요약 차트와 미분류 코드 안내
-- 재고량 표시는 소수점 없이 TON 정수로 표시
+- 대시보드의 재고·입고·출고·순변동·WMS 집계 수량은 모두 TON 정수로 반올림하고 천 단위 콤마로 표시
+- `2026년 재고 현황` 전용 화면에서 기존 actual 입고·출고 실적과 forecast를 날짜별로 함께 표시하며 수기 수정 가능
 - 대용량 품목형 `.xlsx`는 Apache POI SAX 스트리밍 방식으로 처리
 - Spring Boot 컨텍스트 테스트
 - Excel 업로드 결과를 MariaDB `inventory_upload_history` 테이블에 영구 저장

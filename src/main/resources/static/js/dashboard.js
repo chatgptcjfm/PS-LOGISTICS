@@ -130,6 +130,9 @@ function getFilteredRecords() {
 
 function renderAll() {
   renderWmsSummary();
+  // 2026년 전체 이력은 기간/기준일 필터와 무관하게 항상 렌더링합니다.
+  // 그래야 과거 실적 입고·출고 기록도 전용 메뉴에서 빠지지 않습니다.
+  renderHistoryTable();
   const records = getFilteredRecords();
   const trendRecords = getPeriodRecords();
   if (!records.length) return;
@@ -144,7 +147,6 @@ function renderAll() {
   renderFlowChart(trendRecords);
   renderRecentTable(records);
   renderWeeklyForecast();
-  renderHistoryTable();
 }
 
 function renderWmsSummary() {
@@ -333,7 +335,11 @@ function applyManualOverrides() {
   let flowAdjustment = 0;
   dashboardData = (dashboardPayload.records || []).map((record) => {
     const override = manualOverrides[record.date] || {};
-    const merged = { ...record, ...override };
+    // 빈 수기값은 기존 실적을 지우지 않고 원본 값으로 되돌립니다.
+    const merged = { ...record };
+    ['currentStock', 'inbound', 'outbound'].forEach((field) => {
+      if (override[field] != null) merged[field] = override[field];
+    });
     const hasStockOverride = override.currentStock != null;
     const hasFlowOverride = override.inbound != null || override.outbound != null;
 
