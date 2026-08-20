@@ -322,9 +322,8 @@ function renderWeeklyForecast() {
 
 function renderHistoryTable() {
   const rows = dashboardData.map((record) => {
-    const net = valueOrZero(record.inbound) - valueOrZero(record.outbound);
     const typeLabel = isForecast(record) ? '<span class="table-badge forecast">예상</span>' : '<span class="table-badge actual">실적</span>';
-    return `<tr><td>${compactDate(record.date)}</td><td>${typeLabel}</td><td><input class="manual-edit" data-date="${record.date}" data-field="currentStock" type="number" min="0" step="1" value="${record.currentStock ?? ''}" aria-label="${record.date} 현재고"></td><td><input class="manual-edit" data-date="${record.date}" data-field="inbound" type="number" min="0" step="1" value="${record.inbound ?? ''}" aria-label="${record.date} 입고량"></td><td><input class="manual-edit" data-date="${record.date}" data-field="outbound" type="number" min="0" step="1" value="${record.outbound ?? ''}" aria-label="${record.date} 출고량"></td><td class="${net >= 0 ? 'positive' : 'negative'}">${net >= 0 ? '+' : ''}${formatTon(net)}</td></tr>`;
+    return `<tr><td>${compactDate(record.date)}</td><td>${typeLabel}</td><td><input class="manual-edit" data-date="${record.date}" data-field="currentStock" type="number" min="0" step="1" value="${record.currentStock ?? ''}" aria-label="${record.date} 현재고"></td></tr>`;
   }).join('');
   document.getElementById('history-table').innerHTML = rows;
 }
