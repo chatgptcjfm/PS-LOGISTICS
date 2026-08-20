@@ -422,10 +422,19 @@ document.querySelectorAll('.trend-tab').forEach((tab) => {
   });
 });
 document.querySelectorAll('.nav-item').forEach((item) => {
-  item.addEventListener('click', () => {
+  item.addEventListener('click', (event) => {
+    const target = item.getAttribute('href');
+    const isHistoryView = target === '#history';
+    if (isHistoryView) {
+      event.preventDefault();
+    }
     document.querySelectorAll('.nav-item').forEach((navItem) => navItem.classList.remove('active'));
     item.classList.add('active');
-    if (item.getAttribute('href') === '#flow-trend-panel') {
+    document.body.classList.toggle('history-view', isHistoryView);
+    if (isHistoryView) {
+      document.getElementById('history').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+    if (target === '#flow-trend-panel') {
       document.querySelector('.trend-tab[data-trend-tab="flow"]').click();
     }
   });
