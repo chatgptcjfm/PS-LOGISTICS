@@ -1,5 +1,6 @@
 const numberFormat = new Intl.NumberFormat('ko-KR', { maximumFractionDigits: 0 });
 const tonNumberFormat = new Intl.NumberFormat('ko-KR', { maximumFractionDigits: 0 });
+const agingTonNumberFormat = new Intl.NumberFormat('ko-KR', { minimumFractionDigits: 0, maximumFractionDigits: 2 });
 const TARGET_CAPA_TON = 10700;
 const MAX_CAPA_TON = 12000;
 const decimalFormat = new Intl.NumberFormat('ko-KR', { maximumFractionDigits: 0 });
@@ -230,10 +231,10 @@ function renderAgingSummary() {
     ['12개월 이상', 'aging-12']
   ];
   bucketOrder.forEach(([label, id]) => {
-    document.getElementById(id).textContent = numberFormat.format(Number(buckets[label] || 0));
+    document.getElementById(id).textContent = agingTonNumberFormat.format(Number(buckets[label] || 0));
   });
-  document.getElementById('aging-total').textContent = numberFormat.format(Number(summary.totalBarcodeCount || 0));
-  document.getElementById('aging-under-3').textContent = numberFormat.format(Number(buckets['3개월 미만'] || 0));
+  document.getElementById('aging-total').textContent = agingTonNumberFormat.format(Number(summary.totalWeightTon || 0));
+  document.getElementById('aging-under-3').textContent = agingTonNumberFormat.format(Number(buckets['3개월 미만'] || 0));
   document.getElementById('aging-reference-date').textContent = `제조일 기준 · ${summary.referenceDate || '-'}`;
 }
 

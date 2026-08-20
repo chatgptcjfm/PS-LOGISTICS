@@ -223,6 +223,7 @@ public class InventoryExcelService {
         private final Map<Integer, String> values = new HashMap<>();
         private final Set<String> unknownCodes = new HashSet<>();
         private final Map<String, Integer> agingCounts = new LinkedHashMap<>();
+        private final Map<String, Double> agingWeightKg = new LinkedHashMap<>();
         private final LocalDate referenceDate = LocalDate.now(SEOUL_ZONE);
         private final Map<String, Double> byCategory = new LinkedHashMap<>();
         private final Map<String, Double> byMarket = new LinkedHashMap<>();
@@ -246,6 +247,10 @@ public class InventoryExcelService {
             agingCounts.put("3개월 이상 ~ 6개월 미만", 0);
             agingCounts.put("6개월 이상 ~ 12개월 미만", 0);
             agingCounts.put("12개월 이상", 0);
+            agingWeightKg.put("3개월 미만", 0D);
+            agingWeightKg.put("3개월 이상 ~ 6개월 미만", 0D);
+            agingWeightKg.put("6개월 이상 ~ 12개월 미만", 0D);
+            agingWeightKg.put("12개월 이상", 0D);
             byMarket.put("내수", 0D);
             byMarket.put("수출", 0D);
             for (String category : byCategory.keySet()) {
@@ -365,7 +370,13 @@ public class InventoryExcelService {
                     : ageMonths >= 6 ? "6개월 이상 ~ 12개월 미만"
                     : ageMonths >= 3 ? "3개월 이상 ~ 6개월 미만"
                     : "3개월 미만";
+            Double weightKg = parseNumber(values.get(columns.get("totalWeight")));
+            if (weightKg == null) {
+                invalidWeightCount++;
+                return;
+            }
             agingCounts.merge(bucket, 1, Integer::sum);
+            agingWeightKg.merge(bucket, weightKg, Double::sum);
             itemCount++;
         }
 
@@ -441,14 +452,19 @@ public class InventoryExcelService {
             Map<String, Object> agingSummary = new LinkedHashMap<>();
             agingSummary.put("referenceDate", referenceDate.toString());
             agingSummary.put("totalBarcodeCount", itemCount);
-            agingSummary.put("invalidBarcodeDateCount", invalidWeightCount);
-            agingSummary.put("buckets", new LinkedHashMap<>(agingCounts));
+            agingSummary.put("totalWeightKg", round(agingWeightKg.values().stream().mapToDouble(Double::doubleValue).sum()));
+            agingSummary.put("totalWeightTon", roundTon(agingWeightKg.values().stream().mapToDouble(Double::doubleValue).sum() / 1000D));
+            agingSummary.put("invalidBarcodeOrWeightCount", invalidWeightCount);
+            agingSummary.put("bucketBarcodeCounts", new LinkedHashMap<>(agingCounts));
+            Map<String, Double> bucketWeightsTon = new LinkedHashMap<>();
+            agingWeightKg.forEach((key, value) -> bucketWeightsTon.put(key, roundTon(value / 1000D)));
+            agingSummary.put("buckets", bucketWeightsTon);
 
             Map<String, Object> result = new LinkedHashMap<>();
             result.put("mode", "wms-barcode-aging");
             result.put("source", filename + " / 첫 번째 시트");
             result.put("sheetName", "sheet1");
-            result.put("unit", "개");
+            result.put("unit", "TON");
             result.put("asOfDate", referenceDate.toString());
             result.put("updatedAt", referenceDate.toString());
             result.put("uploadedAt", uploadedAtText);
@@ -508,6 +524,10 @@ public class InventoryExcelService {
 
         private static double round(double value) {
             return BigDecimal.valueOf(value).setScale(0, RoundingMode.HALF_UP).doubleValue();
+        }
+
+        private static double roundTon(double value) {
+            return BigDecimal.valueOf(value).setScale(2, RoundingMode.HALF_UP).doubleValue();
         }
 
         private static Map<String, Double> roundedTonMap(Map<String, Double> source) {

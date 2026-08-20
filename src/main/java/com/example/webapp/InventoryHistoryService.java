@@ -168,7 +168,9 @@ public class InventoryHistoryService {
             return source.stream().map(InventoryHistoryService::roundNumbers).toList();
         }
         if (value instanceof Number number) {
-            return BigDecimal.valueOf(number.doubleValue()).setScale(0, RoundingMode.HALF_UP).intValue();
+            // 업로드 payload의 장기재고 TON은 소수 둘째 자리까지 보존해야
+            // 총중량 KG ÷ 1,000 결과가 history 복원 시에도 유지됩니다.
+            return BigDecimal.valueOf(number.doubleValue()).setScale(2, RoundingMode.HALF_UP);
         }
         return value;
     }

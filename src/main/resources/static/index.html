@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Noto+Sans+KR:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/css/dashboard.css?v=20260820-3">
+  <link rel="stylesheet" href="/css/dashboard.css?v=20260820-4">
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.9/dist/chart.umd.min.js"></script>
 </head>
 <body>
@@ -110,14 +110,14 @@
             <h2>장기재고 현황</h2>
             <p class="panel-help" id="aging-reference-date">개별바코드 제조일 기준</p>
           </div>
-          <span class="summary-source-badge"><span id="aging-total">0</span>개 분석</span>
+          <span class="summary-source-badge"><span id="aging-total">0</span> TON</span>
         </div>
         <div class="aging-card-grid">
-          <article class="aging-card aging-card-3"><span>3개월 이상<br>6개월 미만</span><strong id="aging-3">0</strong><small>개별바코드</small></article>
-          <article class="aging-card aging-card-6"><span>6개월 이상<br>12개월 미만</span><strong id="aging-6">0</strong><small>개별바코드</small></article>
-          <article class="aging-card aging-card-12"><span>12개월 이상</span><strong id="aging-12">0</strong><small>개별바코드</small></article>
+          <article class="aging-card aging-card-3"><span>3개월 이상<br>6개월 미만</span><strong id="aging-3">0</strong><small>TON</small></article>
+          <article class="aging-card aging-card-6"><span>6개월 이상<br>12개월 미만</span><strong id="aging-6">0</strong><small>TON</small></article>
+          <article class="aging-card aging-card-12"><span>12개월 이상</span><strong id="aging-12">0</strong><small>TON</small></article>
         </div>
-        <p class="aging-note">3개월 미만 재고 <strong id="aging-under-3">0</strong>개는 장기재고 집계에서 제외했습니다.</p>
+        <p class="aging-note">3개월 미만 재고 <strong id="aging-under-3">0</strong> TON은 장기재고 집계에서 제외했습니다.</p>
       </section>
 
       <section class="wms-summary-panel panel" id="wms-summary" aria-label="WMS 품목 분류 요약">
@@ -198,6 +198,6 @@
       <footer class="page-footer">기존 연간 재고 변동 유지 · 품목형 WMS 총중량 KG ÷ 1,000 · 업로드 시각 기준 현재고 스냅샷 · 수기 입력은 서버에 저장 · 표시 단위 TON</footer>
     </main>
   </div>
-  <script src="/js/dashboard.js?v=20260820-3"></script>
+  <script src="/js/dashboard.js?v=20260820-4"></script>
 </body>
 </html>
