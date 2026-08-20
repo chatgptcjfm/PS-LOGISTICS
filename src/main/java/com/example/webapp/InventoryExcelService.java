@@ -197,7 +197,7 @@ public class InventoryExcelService {
         }
         try {
             double value = cell.getNumericCellValue();
-            return BigDecimal.valueOf(value).setScale(3, RoundingMode.HALF_UP).doubleValue();
+            return BigDecimal.valueOf(value).setScale(0, RoundingMode.HALF_UP).doubleValue();
         } catch (IllegalStateException exception) {
             try {
                 String text = formatter.formatCellValue(cell).replace(",", "").trim();
@@ -419,7 +419,7 @@ public class InventoryExcelService {
         }
 
         private static double round(double value) {
-            return BigDecimal.valueOf(value).setScale(3, RoundingMode.HALF_UP).doubleValue();
+            return BigDecimal.valueOf(value).setScale(0, RoundingMode.HALF_UP).doubleValue();
         }
 
         private static Map<String, Double> roundedTonMap(Map<String, Double> source) {
