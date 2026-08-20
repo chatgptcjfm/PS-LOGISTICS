@@ -40,12 +40,16 @@ Java 17, Spring Boot, MariaDB 기반 웹 프로젝트의 로컬 샌드박스입�
 - 재고량 표시는 소수점 없이 TON 정수로 표시
 - 대용량 품목형 `.xlsx`는 Apache POI SAX 스트리밍 방식으로 처리
 - Spring Boot 컨텍스트 테스트
+- Excel 업로드 결과를 MariaDB `inventory_upload_history` 테이블에 영구 저장
+- 대시보드 재접속·PM2 재시작 후에도 저장된 업로드 이력 자동 복원
+- 여러 업로드를 시간순으로 누적 병합하며, 동일 날짜는 최신 snapshot을 적용
 
 ## 대시보드 URI
 
 - `http://localhost:8080/` — 재고 운영 대시보드
-- `/data/inventory-dashboard.json` — 대시보드용 변환 데이터
-- `POST /api/inventory/upload` — multipart/form-data의 `file` 필드로 `.xlsx` 업로드
+- `/data/inventory-dashboard.json` — 대시보드용 정적 연간 baseline 데이터
+- `POST /api/inventory/upload` — multipart/form-data의 `file` 필드로 `.xlsx` 업로드 및 MariaDB 저장
+- `GET /api/inventory/history` — 저장된 Excel 업로드 이력과 원본 payload 조회
 - 데이터 기준 시트: 업로드 파일의 첫 번째 시트(`26년 09시 WMS 재고`)
 - 기준일: `2026-08-13` (이 날짜까지 실적, `2026-08-14`부터 예상)
 - 단위: TON

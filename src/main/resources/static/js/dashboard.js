@@ -54,23 +54,43 @@ async function loadDashboard() {
   const response = await fetch('/data/inventory-dashboard.json');
   if (!response.ok) throw new Error('대시보드 데이터를 불러오지 못했습니다.');
   baselinePayload = await response.json();
-  setDashboardPayload(baselinePayload);
-  document.getElementById('upload-status').textContent = '첫 번째 WMS 시트 사용';
+
+  const historyResponse = await fetch('/api/inventory/history');
+  const history = historyResponse.ok ? await historyResponse.json() : [];
+  setDashboardPayload(mergePersistedHistory(baselinePayload, history));
+  document.getElementById('upload-status').textContent = history.length
+    ? `저장된 업로드 ${history.length}건을 복원했습니다.`
+    : '첫 번째 WMS 시트 사용';
+}
+
+function mergePersistedHistory(basePayload, history) {
+  const recordsByDate = new Map((basePayload.records || []).map((record) => [record.date, { ...record }]));
+  let latestItemPayload = null;
+
+  [...history].sort((a, b) => String(a.uploadedAt || '').localeCompare(String(b.uploadedAt || ''))).forEach((entry) => {
+    const payload = entry.payload || entry;
+    (payload.records || []).forEach((record) => {
+      const existing = recordsByDate.get(record.date) || {};
+      const isItemSnapshot = payload.mode === 'wms-item-summary';
+      recordsByDate.set(record.date, isItemSnapshot
+        ? { ...existing, date: record.date, dataType: record.dataType || existing.dataType, currentStock: record.currentStock, uploadedAt: record.uploadedAt }
+        : { ...existing, ...record });
+    });
+    if (payload.mode === 'wms-item-summary') {
+      latestItemPayload = payload;
+    }
+  });
+
+  return {
+    ...basePayload,
+    ...(latestItemPayload || {}),
+    records: [...recordsByDate.values()].sort((a, b) => a.date.localeCompare(b.date)),
+    uploadHistoryCount: history.length
+  };
 }
 
 function mergeItemSnapshot(payload) {
-  const historicalRecords = baselinePayload?.records?.length
-    ? baselinePayload.records
-    : dashboardData;
-  const recordsByDate = new Map(historicalRecords.map((record) => [record.date, record]));
-  (payload.records || []).forEach((record) => {
-    recordsByDate.set(record.date, { ...recordsByDate.get(record.date), ...record });
-  });
-  return {
-    ...baselinePayload,
-    ...payload,
-    records: [...recordsByDate.values()].sort((a, b) => a.date.localeCompare(b.date))
-  };
+  return mergePersistedHistory(baselinePayload || { records: [] }, [{ payload }]);
 }
 
 function setDashboardPayload(payload) {
@@ -294,10 +314,12 @@ async function uploadExcel(file) {
     const response = await fetch('/api/inventory/upload', { method: 'POST', body: formData });
     const payload = await response.json();
     if (!response.ok) throw new Error(payload.message || 'Excel 업로드에 실패했습니다.');
-    setDashboardPayload(payload);
+    const historyResponse = await fetch('/api/inventory/history');
+    const history = historyResponse.ok ? await historyResponse.json() : [{ payload }];
+    setDashboardPayload(mergePersistedHistory(baselinePayload, history));
     status.textContent = payload.mode === 'wms-item-summary'
-      ? `${payload.sheetName} 품목 요약 반영 완료`
-      : `${payload.sheetName} 반영 완료`;
+      ? `${payload.sheetName} 품목 요약 저장 및 반영 완료 (누적 ${history.length}건)`
+      : `${payload.sheetName} 저장 및 반영 완료 (누적 ${history.length}건)`;
   } catch (error) {
     status.textContent = error.message;
   }
