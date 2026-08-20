@@ -49,7 +49,8 @@ Java 17, Spring Boot, MariaDB 기반 웹 프로젝트의 로컬 샌드박스입�
 
 ## 대시보드 URI
 
-- `http://localhost:8080/` — 재고 운영 대시보드
+- [현재 대시보드 열기](https://8080-ieyulwccydht5qptrk0ik-82b888ba.sandbox.novita.ai/) — 실행 중인 재고 운영 대시보드
+- `http://localhost:8080/` — 로컬 재고 운영 대시보드
 - `/data/inventory-dashboard.json` — 대시보드용 정적 연간 baseline 데이터
 - `POST /api/inventory/upload` — multipart/form-data의 `file` 필드로 `.xlsx` 업로드 및 MariaDB 저장
 - `GET /api/inventory/history` — 저장된 Excel 업로드 이력과 원본 payload 조회
