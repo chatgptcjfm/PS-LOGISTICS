@@ -306,7 +306,7 @@ public class InventoryExcelService {
             }
             itemCode = itemCode.trim().toUpperCase(Locale.ROOT);
             String category = categoryOf(itemCode);
-            String market = marketOf(itemCode);
+            String market = marketOf(itemCode, category);
             if (category == null || market == null) {
                 if (unknownCodes.size() < 20) {
                     unknownCodes.add(itemCode);
@@ -366,7 +366,7 @@ public class InventoryExcelService {
             result.put("forecastFrom", today);
             result.put("updatedAt", today);
             result.put("uploadedAt", uploadedAtText);
-            result.put("classificationRules", Map.of("category", "F=시트, H=원지, S=상품", "market", "품목코드 5번째 문자 1=내수, 2=수출"));
+            result.put("classificationRules", Map.of("category", "F=시트, H=원지, S=상품", "market", "품목코드 5번째 문자 1=내수, 2=수출, 상품(S)은 내수로 처리"));
             result.put("inventorySummary", summary);
             result.put("records", List.of(record));
             return result;
@@ -381,7 +381,11 @@ public class InventoryExcelService {
             };
         }
 
-        private static String marketOf(String code) {
+        private static String marketOf(String code, String category) {
+            // 상품(S) 품목은 코드 5번째 문자가 숫자가 아닌 경우에도 내수로 집계한다.
+            if ("상품".equals(category)) {
+                return code.length() >= 5 && code.charAt(4) == '2' ? "수출" : "내수";
+            }
             if (code.length() < 5) {
                 return null;
             }

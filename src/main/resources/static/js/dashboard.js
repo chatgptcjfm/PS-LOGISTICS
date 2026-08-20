@@ -1,5 +1,7 @@
 const numberFormat = new Intl.NumberFormat('ko-KR', { maximumFractionDigits: 0 });
-const tonNumberFormat = new Intl.NumberFormat('ko-KR', { minimumFractionDigits: 0, maximumFractionDigits: 2 });
+const tonNumberFormat = new Intl.NumberFormat('ko-KR', { maximumFractionDigits: 0 });
+const TARGET_CAPA_TON = 10700;
+const MAX_CAPA_TON = 12000;
 const decimalFormat = new Intl.NumberFormat('ko-KR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 let dashboardData = [];
 let dashboardPayload = {};
@@ -16,6 +18,8 @@ const OVERRIDES_STORAGE_KEY = 'inventory-flow-overrides-v1';
 const valueOrZero = (value) => typeof value === 'number' ? value : 0;
 const formatTon = (value) => value == null ? '-' : tonNumberFormat.format(value);
 const formatRatio = (value) => value == null ? '-' : `${decimalFormat.format(value)}x`;
+const targetRatio = (record) => valueOrZero(record.currentStock) / TARGET_CAPA_TON;
+const maxRatio = (record) => valueOrZero(record.currentStock) / MAX_CAPA_TON;
 const dateLabel = (date) => {
   const [, month, day] = date.split('-');
   return `${Number(month)}/${Number(day)}`;
@@ -170,20 +174,20 @@ function renderMetrics(records) {
   const previous = operationalIndex > 0 ? records[operationalIndex - 1] : latest;
   const change = valueOrZero(latest.currentStock) - valueOrZero(previous.currentStock);
   const netFlow = valueOrZero(latest.inbound) - valueOrZero(latest.outbound);
-  const target = valueOrZero(latest.targetCapaRatio);
-  const max = valueOrZero(latest.maxCapaRatio);
+  const target = targetRatio(latest);
+  const max = maxRatio(latest);
 
   document.getElementById('current-stock').textContent = formatTon(latest.currentStock);
   document.querySelector('.metric-primary .metric-tag').textContent = dashboardPayload.mode === 'wms-item-summary'
     ? '파일 업로드 시각 기준'
     : '09:00 기준';
   document.getElementById('stock-change').textContent = `${change >= 0 ? '+' : ''}${formatTon(change)} 전일 대비`;
-  document.getElementById('target-capa').textContent = formatRatio(latest.targetCapaRatio);
-  document.getElementById('max-capa').textContent = formatRatio(latest.maxCapaRatio);
+  document.getElementById('target-capa').textContent = formatRatio(target);
+  document.getElementById('max-capa').textContent = formatRatio(max);
   document.getElementById('net-flow').textContent = `${netFlow >= 0 ? '+' : ''}${formatTon(netFlow)}`;
   document.getElementById('target-status').textContent = target <= 1 ? '안정' : '초과';
   document.getElementById('max-status').textContent = max <= 1 ? '여유' : '주의';
-  document.getElementById('capa-summary-value').textContent = formatRatio(records.reduce((sum, r) => sum + valueOrZero(r.targetCapaRatio), 0) / records.length);
+  document.getElementById('capa-summary-value').textContent = formatRatio(records.reduce((sum, record) => sum + targetRatio(record), 0) / records.length);
   const pill = document.getElementById('capa-pill');
   pill.textContent = max <= 1 ? 'MAX 기준 여유' : 'MAX 기준 초과';
   pill.style.color = max <= 1 ? '#147e69' : '#b46c27';
@@ -206,7 +210,7 @@ function renderInventoryChart(records) {
   destroyChart(inventoryChart);
   const actual = records.map((record) => !isForecast(record) ? record.currentStock : null);
   const forecast = records.map((record) => isForecast(record) ? record.currentStock : null);
-  const targetCapa = records.map((record) => record.currentStock && record.targetCapaRatio ? record.currentStock / record.targetCapaRatio : null);
+  const targetCapa = records.map(() => TARGET_CAPA_TON);
   inventoryChart = new Chart(document.getElementById('inventory-chart'), {
     type: 'line',
     data: { labels: records.map(r => dateLabel(r.date)), datasets: [
@@ -223,8 +227,8 @@ function renderCapaChart(records) {
   capaChart = new Chart(document.getElementById('capa-chart'), {
     type: 'line',
     data: { labels: records.map(r => dateLabel(r.date)), datasets: [
-      { label: '적정 CAPA', data: records.map(r => r.targetCapaRatio), borderColor: '#2446a7', backgroundColor: 'rgba(36,70,167,.08)', fill: true, borderWidth: 2, pointRadius: 0, tension: .35 },
-      { label: 'MAX CAPA', data: records.map(r => r.maxCapaRatio), borderColor: '#f1a34a', borderWidth: 1.8, pointRadius: 0, borderDash: [4, 4], tension: .35 }
+      { label: '적정 CAPA 10,700 TON', data: records.map(() => 1), borderColor: '#2446a7', backgroundColor: 'rgba(36,70,167,.08)', fill: true, borderWidth: 2, pointRadius: 0, tension: .35 },
+      { label: 'MAX CAPA 12,000 TON', data: records.map(() => MAX_CAPA_TON / TARGET_CAPA_TON), borderColor: '#f1a34a', borderWidth: 1.8, pointRadius: 0, borderDash: [4, 4], tension: .35 }
     ] },
     options: { ...chartDefaults, scales: { ...chartDefaults.scales, y: { ...chartDefaults.scales.y, ticks: { ...chartDefaults.scales.y.ticks, callback: (value) => `${Number(value).toFixed(1)}x` } } }, plugins: { ...chartDefaults.plugins, tooltip: { ...chartDefaults.plugins.tooltip, callbacks: { label: (context) => `${context.dataset.label}: ${formatRatio(context.parsed.y)}` } } } }
   });
