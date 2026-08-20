@@ -5,6 +5,8 @@ let dashboardPayload = {};
 let inventoryChart;
 let capaChart;
 let flowChart;
+let categoryChart;
+let marketChart;
 let selectedDate = '';
 let manualOverrides = {};
 const OVERRIDES_STORAGE_KEY = 'inventory-flow-overrides-v1';
@@ -72,6 +74,7 @@ function getFilteredRecords() {
 }
 
 function renderAll() {
+  renderWmsSummary();
   const records = getFilteredRecords();
   if (!records.length) return;
   const latest = records[records.length - 1];
@@ -81,6 +84,60 @@ function renderAll() {
   renderCapaChart(records);
   renderFlowChart(records);
   renderRecentTable(records);
+}
+
+function renderWmsSummary() {
+  const panel = document.getElementById('wms-summary');
+  const summary = dashboardPayload.inventorySummary;
+  if (!summary) {
+    panel.hidden = true;
+    destroyChart(categoryChart);
+    destroyChart(marketChart);
+    return;
+  }
+
+  panel.hidden = false;
+  const categories = ['시트', '원지', '상품'];
+  const markets = ['내수', '수출'];
+  const byCategory = summary.byCategory || {};
+  const byMarket = summary.byMarket || {};
+  const byCategoryMarket = summary.byCategoryMarket || {};
+  const categoryValues = categories.map((category) => valueOrZero(byCategory[category]));
+  const marketValues = markets.map((market) => valueOrZero(byMarket[market]));
+
+  document.getElementById('wms-summary-badge').textContent = `${formatTon(summary.totalWeight)} TON`;
+  document.getElementById('wms-summary-help').textContent = `${dashboardPayload.sheetName || '첫 번째 시트'} · 총중량 기준 · ${summary.itemCount ?? 0}건 품목 집계`;
+
+  destroyChart(categoryChart);
+  categoryChart = new Chart(document.getElementById('category-chart'), {
+    type: 'doughnut',
+    data: { labels: categories, datasets: [{ data: categoryValues, backgroundColor: ['#2446a7', '#46c2a5', '#f1a34a'], borderWidth: 0 }] },
+    options: { responsive: true, maintainAspectRatio: false, cutout: '66%', plugins: { legend: { position: 'bottom', labels: { boxWidth: 10, font: { family: 'Noto Sans KR', size: 10 }, color: '#72809a' } }, tooltip: { callbacks: { label: (context) => `${context.label}: ${formatTon(context.parsed)} TON` } } } }
+  });
+
+  destroyChart(marketChart);
+  marketChart = new Chart(document.getElementById('market-chart'), {
+    type: 'bar',
+    data: { labels: markets, datasets: [{ label: '현재고', data: marketValues, backgroundColor: ['#5f82dd', '#f1a34a'], borderRadius: 5, maxBarThickness: 36 }] },
+    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false }, tooltip: { callbacks: { label: (context) => `${formatTon(context.parsed.y)} TON` } } }, scales: { x: { grid: { display: false }, ticks: { color: '#72809a', font: { family: 'Noto Sans KR', size: 10 } } }, y: { beginAtZero: true, grid: { color: '#edf1f6' }, border: { display: false }, ticks: { color: '#8e9ab0', font: { family: 'Manrope', size: 10 }, callback: (value) => numberFormat.format(value) } } } }
+  });
+
+  const rows = categories.map((category) => {
+    const values = byCategoryMarket[category] || {};
+    const domestic = valueOrZero(values['내수']);
+    const exportValue = valueOrZero(values['수출']);
+    return `<tr><td>${category}</td><td>${formatTon(domestic)}</td><td>${formatTon(exportValue)}</td><td>${formatTon(domestic + exportValue)}</td></tr>`;
+  }).join('');
+  const totalDomestic = valueOrZero(byMarket['내수']);
+  const totalExport = valueOrZero(byMarket['수출']);
+  document.getElementById('category-market-table').innerHTML = `${rows}<tr><td>합계</td><td>${formatTon(totalDomestic)}</td><td>${formatTon(totalExport)}</td><td>${formatTon(summary.totalWeight)}</td></tr>`;
+
+  const unknownCodes = summary.unknownCodes || [];
+  const unknownNote = document.getElementById('unknown-code-note');
+  unknownNote.hidden = !unknownCodes.length;
+  if (unknownCodes.length) {
+    unknownNote.textContent = `분류 제외 ${summary.unknownCodeCount ?? unknownCodes.length}건: 품목코드 5번째 문자가 1(내수) 또는 2(수출)이 아닌 코드입니다. ${unknownCodes.join(', ')}`;
+  }
 }
 
 function renderMetrics(records) {
@@ -203,7 +260,9 @@ async function uploadExcel(file) {
     const payload = await response.json();
     if (!response.ok) throw new Error(payload.message || 'Excel 업로드에 실패했습니다.');
     setDashboardPayload(payload);
-    status.textContent = `${payload.sheetName} 반영 완료`;
+    status.textContent = payload.mode === 'wms-item-summary'
+      ? `${payload.sheetName} 품목 요약 반영 완료`
+      : `${payload.sheetName} 반영 완료`;
   } catch (error) {
     status.textContent = error.message;
   }

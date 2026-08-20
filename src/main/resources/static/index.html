@@ -89,6 +89,29 @@
         </article>
       </section>
 
+      <section class="wms-summary-panel panel" id="wms-summary" aria-label="WMS 품목 분류 요약">
+        <div class="panel-header">
+          <div>
+            <p class="panel-kicker">WMS ITEM SUMMARY</p>
+            <h2>WMS 품목별 현재고 요약</h2>
+            <p class="panel-help" id="wms-summary-help">업로드한 첫 번째 시트의 총중량을 품목 유형과 시장별로 집계합니다.</p>
+          </div>
+          <span class="summary-source-badge" id="wms-summary-badge">대기 중</span>
+        </div>
+        <div class="wms-summary-grid">
+          <div class="summary-chart-box"><canvas id="category-chart" aria-label="품목 유형별 현재고 차트"></canvas></div>
+          <div class="summary-chart-box"><canvas id="market-chart" aria-label="내수와 수출 현재고 차트"></canvas></div>
+          <div class="summary-table-wrap">
+            <h3>유형 × 시장</h3>
+            <table class="summary-table">
+              <thead><tr><th>품목 유형</th><th>내수</th><th>수출</th><th>합계</th></tr></thead>
+              <tbody id="category-market-table"></tbody>
+            </table>
+          </div>
+        </div>
+        <div class="unknown-code-note" id="unknown-code-note" hidden></div>
+      </section>
+
       <section class="dashboard-grid">
         <article class="panel panel-wide" id="trend">
           <div class="panel-header">
@@ -126,7 +149,7 @@
           </div>
         </article>
       </section>
-      <footer class="page-footer">26년 09시 WMS 재고 첫 번째 시트 기준 · 기준 날짜 선택 가능 · 입고/출고 수기 변경은 이 브라우저에 저장 · 단위 TON</footer>
+      <footer class="page-footer">26년 09시 WMS 재고 첫 번째 시트 기준 · 품목형 WMS는 총중량과 품목코드 기준 집계 · 기준 날짜 선택 가능 · 입고/출고 수기 변경은 이 브라우저에 저장 · 단위 TON</footer>
     </main>
   </div>
   <script src="/js/dashboard.js"></script>
