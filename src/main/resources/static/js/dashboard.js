@@ -16,7 +16,8 @@ let manualOverrides = {};
 const OVERRIDES_STORAGE_KEY = 'inventory-flow-overrides-v1';
 
 const valueOrZero = (value) => typeof value === 'number' ? value : 0;
-const formatTon = (value) => value == null ? '-' : tonNumberFormat.format(value);
+const formatTon = (value) => value == null ? '-' : tonNumberFormat.format(Math.round(Number(value)));
+const inputTon = (value) => value == null ? '' : formatTon(value);
 const formatRatio = (value) => value == null ? '-' : `${decimalFormat.format(value * 100)}%`;
 const targetRatio = (record) => valueOrZero(record.currentStock) / TARGET_CAPA_TON;
 const maxRatio = (record) => valueOrZero(record.currentStock) / MAX_CAPA_TON;
@@ -108,10 +109,7 @@ function setDashboardPayload(payload) {
     payload = mergeItemSnapshot(payload);
   }
   dashboardPayload = payload;
-  dashboardData = (payload.records || []).map((record) => ({
-    ...record,
-    ...(manualOverrides[record.date] || {})
-  }));
+  applyManualOverrides();
   selectedDate = clampDate(selectedDate || localDateString(), dashboardData);
   const dateInput = document.getElementById('as-of-date');
   dateInput.value = selectedDate;
@@ -284,7 +282,7 @@ function renderRecentTable(records) {
   const rows = records.slice(-7).reverse().map((record) => {
     const net = valueOrZero(record.inbound) - valueOrZero(record.outbound);
     const typeLabel = isForecast(record) ? '<span class="table-badge forecast">예상</span>' : '<span class="table-badge actual">실적</span>';
-    return `<tr><td>${compactDate(record.date)}</td><td>${typeLabel}</td><td>${formatTon(record.currentStock)}</td><td><input class="manual-edit" data-date="${record.date}" data-field="inbound" type="number" min="0" step="1" value="${record.inbound ?? ''}" aria-label="${record.date} 입고량"></td><td><input class="manual-edit" data-date="${record.date}" data-field="outbound" type="number" min="0" step="1" value="${record.outbound ?? ''}" aria-label="${record.date} 출고량"></td><td class="${net >= 0 ? 'positive' : 'negative'}">${net >= 0 ? '+' : ''}${formatTon(net)}</td></tr>`;
+    return `<tr><td>${compactDate(record.date)}</td><td>${typeLabel}</td><td>${formatTon(record.currentStock)}</td><td><input class="manual-edit" data-date="${record.date}" data-field="inbound" type="text" inputmode="numeric" value="${inputTon(record.inbound)}" aria-label="${record.date} 입고량"></td><td><input class="manual-edit" data-date="${record.date}" data-field="outbound" type="text" inputmode="numeric" value="${inputTon(record.outbound)}" aria-label="${record.date} 출고량"></td><td class="${net >= 0 ? 'positive' : 'negative'}">${net >= 0 ? '+' : ''}${formatTon(net)}</td></tr>`;
   }).join('');
   document.getElementById('recent-table').innerHTML = rows;
 }
@@ -315,7 +313,7 @@ function renderWeeklyForecast() {
       : runningStock;
     runningStock = Math.round(baseStock + inbound - outbound);
     const typeLabel = isForecast(record) ? '<span class="table-badge forecast">예상</span>' : '<span class="table-badge actual">실적</span>';
-    return `<tr><td>${compactDate(date)}</td><td>${typeLabel}</td><td>${formatTon(baseStock)}</td><td><input class="manual-edit" data-date="${date}" data-field="inbound" type="number" min="0" step="1" value="${inbound}" aria-label="${date} 1주일 입고량"></td><td><input class="manual-edit" data-date="${date}" data-field="outbound" type="number" min="0" step="1" value="${outbound}" aria-label="${date} 1주일 출고량"></td><td class="projected-stock">${formatTon(runningStock)}</td><td class="${inbound - outbound >= 0 ? 'positive' : 'negative'}">${inbound - outbound >= 0 ? '+' : ''}${formatTon(inbound - outbound)}</td></tr>`;
+    return `<tr><td>${compactDate(date)}</td><td>${typeLabel}</td><td>${formatTon(baseStock)}</td><td><input class="manual-edit" data-date="${date}" data-field="inbound" type="text" inputmode="numeric" value="${inputTon(inbound)}" aria-label="${date} 1주일 입고량"></td><td><input class="manual-edit" data-date="${date}" data-field="outbound" type="text" inputmode="numeric" value="${inputTon(outbound)}" aria-label="${date} 1주일 출고량"></td><td class="projected-stock">${formatTon(runningStock)}</td><td class="${inbound - outbound >= 0 ? 'positive' : 'negative'}">${inbound - outbound >= 0 ? '+' : ''}${formatTon(inbound - outbound)}</td></tr>`;
   }).join('');
   document.getElementById('weekly-forecast-table').innerHTML = rows;
 }
@@ -323,22 +321,44 @@ function renderWeeklyForecast() {
 function renderHistoryTable() {
   const rows = dashboardData.map((record) => {
     const typeLabel = isForecast(record) ? '<span class="table-badge forecast">예상</span>' : '<span class="table-badge actual">실적</span>';
-    return `<tr><td>${compactDate(record.date)}</td><td>${typeLabel}</td><td><input class="manual-edit" data-date="${record.date}" data-field="currentStock" type="number" min="0" step="1" value="${record.currentStock ?? ''}" aria-label="${record.date} 현재고"></td></tr>`;
+    const currentStock = record.currentStock == null ? '' : Math.round(Number(record.currentStock));
+    const inbound = record.inbound == null ? '' : Math.round(Number(record.inbound));
+    const outbound = record.outbound == null ? '' : Math.round(Number(record.outbound));
+    return `<tr><td>${compactDate(record.date)}</td><td>${typeLabel}</td><td><input class="manual-edit" data-date="${record.date}" data-field="currentStock" type="text" inputmode="numeric" value="${inputTon(currentStock)}" aria-label="${record.date} 현재고"></td><td><input class="manual-edit" data-date="${record.date}" data-field="inbound" type="text" inputmode="numeric" value="${inputTon(inbound)}" aria-label="${record.date} 입고량"></td><td><input class="manual-edit" data-date="${record.date}" data-field="outbound" type="text" inputmode="numeric" value="${inputTon(outbound)}" aria-label="${record.date} 출고량"></td></tr>`;
   }).join('');
   document.getElementById('history-table').innerHTML = rows;
 }
 
 function applyManualOverrides() {
-  dashboardData = (dashboardPayload.records || []).map((record) => ({
-    ...record,
-    ...(manualOverrides[record.date] || {})
-  }));
+  let flowAdjustment = 0;
+  dashboardData = (dashboardPayload.records || []).map((record) => {
+    const override = manualOverrides[record.date] || {};
+    const merged = { ...record, ...override };
+    const hasStockOverride = override.currentStock != null;
+    const hasFlowOverride = override.inbound != null || override.outbound != null;
+
+    if (hasStockOverride) {
+      merged.currentStock = Math.round(Number(override.currentStock));
+      flowAdjustment = merged.currentStock - valueOrZero(record.currentStock);
+    } else {
+      if (hasFlowOverride) {
+        flowAdjustment += (valueOrZero(merged.inbound) - valueOrZero(record.inbound))
+          - (valueOrZero(merged.outbound) - valueOrZero(record.outbound));
+      }
+      if (flowAdjustment !== 0) {
+        merged.currentStock = Math.round(valueOrZero(record.currentStock) + flowAdjustment);
+      }
+    }
+
+    return merged;
+  });
 }
 
 async function saveManualOverrides() {
   const valuesByDate = new Map();
   document.querySelectorAll('.manual-edit').forEach((input) => {
-    const value = input.value === '' ? null : Math.round(Number(input.value));
+    const rawValue = input.value.replaceAll(',', '').trim();
+    const value = rawValue === '' ? null : Math.round(Number(rawValue));
     if (value !== null && (!Number.isFinite(value) || value < 0)) return;
     const dateValues = valuesByDate.get(input.dataset.date) || {};
     dateValues[input.dataset.field] = value;

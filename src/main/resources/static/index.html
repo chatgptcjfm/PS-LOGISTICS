@@ -168,12 +168,12 @@
 
       <section class="panel history-panel" id="history" aria-label="2026년 재고 현황">
         <div class="panel-header">
-          <div><p class="panel-kicker">2026 INVENTORY STATUS</p><h2>2026년 재고 현황</h2><p class="panel-help">2026년 날짜별 재고 현황만 확인하고 수기로 수정할 수 있습니다.</p></div>
+          <div><p class="panel-kicker">2026 INVENTORY STATUS</p><h2>2026년 재고 현황</h2><p class="panel-help">2026년 날짜별 현재고와 입고·출고 기록을 확인하고 수기로 수정할 수 있습니다.</p></div>
           <div class="table-actions"><button class="table-action primary" id="save-history-button" type="button">재고 현황 저장</button><button class="table-action" id="reset-history-button" type="button">수기값 초기화</button></div>
         </div>
         <div class="table-wrap history-table-wrap">
           <table class="editable-table">
-            <thead><tr><th>날짜</th><th>구분</th><th>현재고</th></tr></thead>
+            <thead><tr><th>날짜</th><th>구분</th><th>현재고</th><th>입고량</th><th>출고량</th></tr></thead>
             <tbody id="history-table"></tbody>
           </table>
         </div>
