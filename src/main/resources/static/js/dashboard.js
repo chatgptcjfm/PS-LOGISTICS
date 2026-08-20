@@ -1,7 +1,9 @@
 const numberFormat = new Intl.NumberFormat('ko-KR', { maximumFractionDigits: 0 });
+const tonNumberFormat = new Intl.NumberFormat('ko-KR', { minimumFractionDigits: 0, maximumFractionDigits: 2 });
 const decimalFormat = new Intl.NumberFormat('ko-KR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 let dashboardData = [];
 let dashboardPayload = {};
+let baselinePayload = null;
 let inventoryChart;
 let capaChart;
 let flowChart;
@@ -12,7 +14,7 @@ let manualOverrides = {};
 const OVERRIDES_STORAGE_KEY = 'inventory-flow-overrides-v1';
 
 const valueOrZero = (value) => typeof value === 'number' ? value : 0;
-const formatTon = (value) => value == null ? '-' : numberFormat.format(Math.round(value));
+const formatTon = (value) => value == null ? '-' : tonNumberFormat.format(value);
 const formatRatio = (value) => value == null ? '-' : `${decimalFormat.format(value)}x`;
 const dateLabel = (date) => {
   const [, month, day] = date.split('-');
@@ -47,11 +49,30 @@ const updateClock = () => {
 async function loadDashboard() {
   const response = await fetch('/data/inventory-dashboard.json');
   if (!response.ok) throw new Error('대시보드 데이터를 불러오지 못했습니다.');
-  setDashboardPayload(await response.json());
+  baselinePayload = await response.json();
+  setDashboardPayload(baselinePayload);
   document.getElementById('upload-status').textContent = '첫 번째 WMS 시트 사용';
 }
 
+function mergeItemSnapshot(payload) {
+  const historicalRecords = baselinePayload?.records?.length
+    ? baselinePayload.records
+    : dashboardData;
+  const recordsByDate = new Map(historicalRecords.map((record) => [record.date, record]));
+  (payload.records || []).forEach((record) => {
+    recordsByDate.set(record.date, { ...recordsByDate.get(record.date), ...record });
+  });
+  return {
+    ...baselinePayload,
+    ...payload,
+    records: [...recordsByDate.values()].sort((a, b) => a.date.localeCompare(b.date))
+  };
+}
+
 function setDashboardPayload(payload) {
+  if (payload.mode === 'wms-item-summary' && baselinePayload?.records?.length) {
+    payload = mergeItemSnapshot(payload);
+  }
   dashboardPayload = payload;
   readManualOverrides();
   dashboardData = (payload.records || []).map((record) => ({
@@ -78,7 +99,10 @@ function renderAll() {
   const records = getFilteredRecords();
   if (!records.length) return;
   const latest = records[records.length - 1];
-  document.getElementById('data-date').textContent = `조회 기준 ${compactDate(latest.date)} · ${isForecast(latest) ? '예상' : '실적'}`;
+  const uploadTime = dashboardPayload.mode === 'wms-item-summary' && dashboardPayload.uploadedAt
+    ? ` · 업로드 ${new Intl.DateTimeFormat('ko-KR', { dateStyle: 'short', timeStyle: 'short' }).format(new Date(dashboardPayload.uploadedAt))}`
+    : '';
+  document.getElementById('data-date').textContent = `조회 기준 ${compactDate(latest.date)} · ${isForecast(latest) ? '예상' : '실적'}${uploadTime}`;
   renderMetrics(records);
   renderInventoryChart(records);
   renderCapaChart(records);
@@ -150,6 +174,9 @@ function renderMetrics(records) {
   const max = valueOrZero(latest.maxCapaRatio);
 
   document.getElementById('current-stock').textContent = formatTon(latest.currentStock);
+  document.querySelector('.metric-primary .metric-tag').textContent = dashboardPayload.mode === 'wms-item-summary'
+    ? '파일 업로드 시각 기준'
+    : '09:00 기준';
   document.getElementById('stock-change').textContent = `${change >= 0 ? '+' : ''}${formatTon(change)} 전일 대비`;
   document.getElementById('target-capa').textContent = formatRatio(latest.targetCapaRatio);
   document.getElementById('max-capa').textContent = formatRatio(latest.maxCapaRatio);

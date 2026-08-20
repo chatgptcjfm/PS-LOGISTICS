@@ -6,6 +6,8 @@ import java.io.InputStream;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDate;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 import java.time.YearMonth;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -331,11 +333,15 @@ public class InventoryExcelService {
             if (itemCount == 0) {
                 throw new IllegalArgumentException("품목코드 규칙(F/H/S 및 5번째 문자 1/2)에 맞는 WMS 데이터가 없습니다.");
             }
-            String today = LocalDate.now().toString();
+            OffsetDateTime uploadedAt = OffsetDateTime.now(ZoneId.of("Asia/Seoul")).withNano(0);
+            String uploadedAtText = uploadedAt.toString();
+            String today = uploadedAt.toLocalDate().toString();
+            double totalWeightTon = totalWeight / 1000D;
             Map<String, Object> record = new LinkedHashMap<>();
             record.put("date", today);
             record.put("dataType", "actual");
-            record.put("currentStock", round(totalWeight));
+            record.put("currentStock", round(totalWeightTon));
+            record.put("uploadedAt", uploadedAtText);
             record.put("inbound", 0D);
             record.put("outbound", 0D);
 
@@ -344,10 +350,12 @@ public class InventoryExcelService {
             summary.put("invalidWeightCount", invalidWeightCount);
             summary.put("unknownCodeCount", unknownCodes.size());
             summary.put("unknownCodes", new ArrayList<>(unknownCodes));
-            summary.put("totalWeight", round(totalWeight));
-            summary.put("byCategory", roundedMap(byCategory));
-            summary.put("byMarket", roundedMap(byMarket));
-            summary.put("byCategoryMarket", roundedNestedMap(byCategoryMarket));
+            summary.put("sourceUnit", "KG");
+            summary.put("totalWeightKg", round(totalWeight));
+            summary.put("totalWeight", round(totalWeightTon));
+            summary.put("byCategory", roundedTonMap(byCategory));
+            summary.put("byMarket", roundedTonMap(byMarket));
+            summary.put("byCategoryMarket", roundedTonNestedMap(byCategoryMarket));
 
             Map<String, Object> result = new LinkedHashMap<>();
             result.put("mode", "wms-item-summary");
@@ -357,6 +365,7 @@ public class InventoryExcelService {
             result.put("asOfDate", today);
             result.put("forecastFrom", today);
             result.put("updatedAt", today);
+            result.put("uploadedAt", uploadedAtText);
             result.put("classificationRules", Map.of("category", "F=시트, H=원지, S=상품", "market", "품목코드 5번째 문자 1=내수, 2=수출"));
             result.put("inventorySummary", summary);
             result.put("records", List.of(record));
@@ -409,15 +418,15 @@ public class InventoryExcelService {
             return BigDecimal.valueOf(value).setScale(3, RoundingMode.HALF_UP).doubleValue();
         }
 
-        private static Map<String, Double> roundedMap(Map<String, Double> source) {
+        private static Map<String, Double> roundedTonMap(Map<String, Double> source) {
             Map<String, Double> result = new LinkedHashMap<>();
-            source.forEach((key, value) -> result.put(key, round(value)));
+            source.forEach((key, value) -> result.put(key, round(value / 1000D)));
             return result;
         }
 
-        private static Map<String, Map<String, Double>> roundedNestedMap(Map<String, Map<String, Double>> source) {
+        private static Map<String, Map<String, Double>> roundedTonNestedMap(Map<String, Map<String, Double>> source) {
             Map<String, Map<String, Double>> result = new LinkedHashMap<>();
-            source.forEach((key, value) -> result.put(key, roundedMap(value)));
+            source.forEach((key, value) -> result.put(key, roundedTonMap(value)));
             return result;
         }
     }
