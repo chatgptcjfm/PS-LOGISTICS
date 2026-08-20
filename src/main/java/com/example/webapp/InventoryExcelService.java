@@ -6,6 +6,7 @@ import java.io.InputStream;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDate;
+import java.time.Period;
 import java.time.OffsetDateTime;
 import java.time.ZoneId;
 import java.time.YearMonth;
@@ -41,6 +42,7 @@ import org.springframework.web.multipart.MultipartFile;
 public class InventoryExcelService {
     private static final LocalDate AS_OF_DATE = LocalDate.of(2026, 8, 13);
     private static final Pattern MONTH_PATTERN = Pattern.compile("(\\d{2})년\\s*(\\d{2})월");
+    private static final ZoneId SEOUL_ZONE = ZoneId.of("Asia/Seoul");
     private final DataFormatter formatter = new DataFormatter();
 
     public Map<String, Object> parse(MultipartFile file) throws IOException {
@@ -220,6 +222,8 @@ public class InventoryExcelService {
         private final String filename;
         private final Map<Integer, String> values = new HashMap<>();
         private final Set<String> unknownCodes = new HashSet<>();
+        private final Map<String, Integer> agingCounts = new LinkedHashMap<>();
+        private final LocalDate referenceDate = LocalDate.now(SEOUL_ZONE);
         private final Map<String, Double> byCategory = new LinkedHashMap<>();
         private final Map<String, Double> byMarket = new LinkedHashMap<>();
         private final Map<String, Map<String, Double>> byCategoryMarket = new LinkedHashMap<>();
@@ -238,6 +242,10 @@ public class InventoryExcelService {
             byCategory.put("시트", 0D);
             byCategory.put("원지", 0D);
             byCategory.put("상품", 0D);
+            agingCounts.put("3개월 미만", 0);
+            agingCounts.put("3개월 이상 ~ 6개월 미만", 0);
+            agingCounts.put("6개월 이상 ~ 12개월 미만", 0);
+            agingCounts.put("12개월 이상", 0);
             byMarket.put("내수", 0D);
             byMarket.put("수출", 0D);
             for (String category : byCategory.keySet()) {
@@ -288,18 +296,25 @@ public class InventoryExcelService {
         private void readHeader() {
             for (Map.Entry<Integer, String> entry : values.entrySet()) {
                 String label = entry.getValue().replace(" ", "").trim();
-                if ("품목코드".equals(label)) {
+                if ("개별바코드".equals(label) || "바코드".equals(label)) {
+                    columns.put("individualBarcode", entry.getKey());
+                } else if ("품목코드".equals(label)) {
                     columns.put("itemCode", entry.getKey());
                 } else if ("총중량".equals(label)) {
                     columns.put("totalWeight", entry.getKey());
                 }
             }
-            if (!columns.containsKey("itemCode") || !columns.containsKey("totalWeight")) {
-                throw new IllegalArgumentException("WMS 파일에서 품목코드 또는 총중량 컬럼을 찾지 못했습니다.");
+            if (!columns.containsKey("individualBarcode")
+                    && (!columns.containsKey("itemCode") || !columns.containsKey("totalWeight"))) {
+                throw new IllegalArgumentException("WMS 파일에서 개별바코드 또는 품목코드·총중량 컬럼을 찾지 못했습니다.");
             }
         }
 
         private void readItem() {
+            if (columns.containsKey("individualBarcode")) {
+                readBarcodeItem(values.get(columns.get("individualBarcode")));
+                return;
+            }
             String itemCode = values.get(columns.get("itemCode"));
             if (itemCode == null || itemCode.isBlank()) {
                 return;
@@ -326,14 +341,62 @@ public class InventoryExcelService {
         }
 
         private boolean hasRequiredColumns() {
-            return columns.containsKey("itemCode") && columns.containsKey("totalWeight");
+            return columns.containsKey("individualBarcode")
+                    || (columns.containsKey("itemCode") && columns.containsKey("totalWeight"));
+        }
+
+        private void readBarcodeItem(String barcodeValue) {
+            if (barcodeValue == null || barcodeValue.isBlank()) {
+                return;
+            }
+            String barcode = barcodeValue.trim().toUpperCase(Locale.ROOT);
+            LocalDate manufactureDate = manufactureDateOf(barcode);
+            if (manufactureDate == null) {
+                invalidWeightCount++;
+                return;
+            }
+            int ageMonths;
+            if (referenceDate.isBefore(manufactureDate)) {
+                ageMonths = 0;
+            } else {
+                ageMonths = (int) Period.between(manufactureDate, referenceDate).toTotalMonths();
+            }
+            String bucket = ageMonths >= 12 ? "12개월 이상"
+                    : ageMonths >= 6 ? "6개월 이상 ~ 12개월 미만"
+                    : ageMonths >= 3 ? "3개월 이상 ~ 6개월 미만"
+                    : "3개월 미만";
+            agingCounts.merge(bucket, 1, Integer::sum);
+            itemCount++;
+        }
+
+        private LocalDate manufactureDateOf(String barcode) {
+            if (barcode.length() < 5) {
+                return null;
+            }
+            try {
+                int year = 2000 + Integer.parseInt(barcode.substring(0, 2));
+                char monthCode = barcode.charAt(2);
+                int month = Character.isDigit(monthCode) ? Integer.parseInt(String.valueOf(monthCode))
+                        : switch (monthCode) { case 'A' -> 10; case 'B' -> 11; case 'C' -> 12; default -> -1; };
+                int day = Integer.parseInt(barcode.substring(3, 5));
+                if (month < 1 || month > 12 || day < 1 || day > 31) {
+                    return null;
+                }
+                LocalDate date = LocalDate.of(year, month, day);
+                return date.isAfter(referenceDate) ? null : date;
+            } catch (RuntimeException exception) {
+                return null;
+            }
         }
 
         private Map<String, Object> toPayload() {
+            if (columns.containsKey("individualBarcode")) {
+                return toBarcodePayload();
+            }
             if (itemCount == 0) {
                 throw new IllegalArgumentException("품목코드 규칙(F/H/S 및 5번째 문자 1/2)에 맞는 WMS 데이터가 없습니다.");
             }
-            OffsetDateTime uploadedAt = OffsetDateTime.now(ZoneId.of("Asia/Seoul")).withNano(0);
+            OffsetDateTime uploadedAt = OffsetDateTime.now(SEOUL_ZONE).withNano(0);
             String uploadedAtText = uploadedAt.toString();
             String today = uploadedAt.toLocalDate().toString();
             double totalWeightTon = totalWeight / 1000D;
@@ -369,6 +432,31 @@ public class InventoryExcelService {
             result.put("classificationRules", Map.of("category", "F=시트, H=원지, S=상품", "market", "품목코드 5번째 문자 1=내수, 2=수출, 상품(S)은 내수로 처리"));
             result.put("inventorySummary", summary);
             result.put("records", List.of(record));
+            return result;
+        }
+
+        private Map<String, Object> toBarcodePayload() {
+            OffsetDateTime uploadedAt = OffsetDateTime.now(SEOUL_ZONE).withNano(0);
+            String uploadedAtText = uploadedAt.toString();
+            Map<String, Object> agingSummary = new LinkedHashMap<>();
+            agingSummary.put("referenceDate", referenceDate.toString());
+            agingSummary.put("totalBarcodeCount", itemCount);
+            agingSummary.put("invalidBarcodeDateCount", invalidWeightCount);
+            agingSummary.put("buckets", new LinkedHashMap<>(agingCounts));
+
+            Map<String, Object> result = new LinkedHashMap<>();
+            result.put("mode", "wms-barcode-aging");
+            result.put("source", filename + " / 첫 번째 시트");
+            result.put("sheetName", "sheet1");
+            result.put("unit", "개");
+            result.put("asOfDate", referenceDate.toString());
+            result.put("updatedAt", referenceDate.toString());
+            result.put("uploadedAt", uploadedAtText);
+            result.put("classificationRules", Map.of(
+                    "manufactureDate", "개별바코드 앞 5자리: YY + M/DD, A=10월·B=11월·C=12월",
+                    "aging", "제조일 기준 경과 개월: 3개월·6개월·12개월 구간"));
+            result.put("agingSummary", agingSummary);
+            result.put("records", List.of());
             return result;
         }
 

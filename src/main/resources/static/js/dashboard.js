@@ -77,6 +77,7 @@ async function loadDashboard() {
 function mergePersistedHistory(basePayload, history) {
   const recordsByDate = new Map((basePayload.records || []).map((record) => [record.date, { ...record }]));
   let latestItemPayload = null;
+  let latestBarcodePayload = null;
 
   [...history].sort((a, b) => String(a.uploadedAt || '').localeCompare(String(b.uploadedAt || ''))).forEach((entry) => {
     const payload = entry.payload || entry;
@@ -90,18 +91,27 @@ function mergePersistedHistory(basePayload, history) {
     if (payload.mode === 'wms-item-summary') {
       latestItemPayload = payload;
     }
+    if (payload.mode === 'wms-barcode-aging') {
+      latestBarcodePayload = payload;
+    }
   });
 
   return {
     ...basePayload,
     ...(latestItemPayload || {}),
+    agingSummary: latestBarcodePayload?.agingSummary || basePayload.agingSummary || null,
     records: [...recordsByDate.values()].sort((a, b) => a.date.localeCompare(b.date)),
     uploadHistoryCount: history.length
   };
 }
 
 function mergeItemSnapshot(payload) {
-  return mergePersistedHistory(baselinePayload || { records: [] }, [{ payload }]);
+  const merged = mergePersistedHistory(baselinePayload || { records: [] }, [{ payload }]);
+  return {
+    ...merged,
+    // 품목형 재업로드를 해도 기존 개별바코드 장기재고 분석을 유지합니다.
+    agingSummary: payload.agingSummary || dashboardPayload.agingSummary || merged.agingSummary || null
+  };
 }
 
 function setDashboardPayload(payload) {
@@ -130,6 +140,7 @@ function getFilteredRecords() {
 
 function renderAll() {
   renderWmsSummary();
+  renderAgingSummary();
   // 2026년 전체 이력은 기간/기준일 필터와 무관하게 항상 렌더링합니다.
   // 그래야 과거 실적 입고·출고 기록도 전용 메뉴에서 빠지지 않습니다.
   renderHistoryTable();
@@ -201,6 +212,29 @@ function renderWmsSummary() {
   if (unknownCodes.length) {
     unknownNote.textContent = `분류 제외 ${summary.unknownCodeCount ?? unknownCodes.length}건: 품목코드 5번째 문자가 1(내수) 또는 2(수출)이 아닌 코드입니다. ${unknownCodes.join(', ')}`;
   }
+}
+
+function renderAgingSummary() {
+  const panel = document.getElementById('aging-summary');
+  const summary = dashboardPayload.agingSummary;
+  if (!summary) {
+    panel.hidden = true;
+    return;
+  }
+
+  panel.hidden = false;
+  const buckets = summary.buckets || {};
+  const bucketOrder = [
+    ['3개월 이상 ~ 6개월 미만', 'aging-3'],
+    ['6개월 이상 ~ 12개월 미만', 'aging-6'],
+    ['12개월 이상', 'aging-12']
+  ];
+  bucketOrder.forEach(([label, id]) => {
+    document.getElementById(id).textContent = numberFormat.format(Number(buckets[label] || 0));
+  });
+  document.getElementById('aging-total').textContent = numberFormat.format(Number(summary.totalBarcodeCount || 0));
+  document.getElementById('aging-under-3').textContent = numberFormat.format(Number(buckets['3개월 미만'] || 0));
+  document.getElementById('aging-reference-date').textContent = `제조일 기준 · ${summary.referenceDate || '-'}`;
 }
 
 function renderMetrics(records) {
