@@ -17,7 +17,7 @@ const OVERRIDES_STORAGE_KEY = 'inventory-flow-overrides-v1';
 
 const valueOrZero = (value) => typeof value === 'number' ? value : 0;
 const formatTon = (value) => value == null ? '-' : tonNumberFormat.format(value);
-const formatRatio = (value) => value == null ? '-' : `${decimalFormat.format(value)}x`;
+const formatRatio = (value) => value == null ? '-' : `${decimalFormat.format(value * 100)}%`;
 const targetRatio = (record) => valueOrZero(record.currentStock) / TARGET_CAPA_TON;
 const maxRatio = (record) => valueOrZero(record.currentStock) / MAX_CAPA_TON;
 const dateLabel = (date) => {
@@ -90,17 +90,21 @@ function setDashboardPayload(payload) {
   renderAll();
 }
 
-function getFilteredRecords() {
+function getPeriodRecords() {
   const selected = document.getElementById('period-select').value;
-  const dateLimited = dashboardData.filter((item) => !selectedDate || item.date <= selectedDate);
-  if (selected === 'all') return dateLimited;
+  if (selected === 'all') return dashboardData;
   const month = selected.slice(-2);
-  return dateLimited.filter((item) => item.date.slice(5, 7) === month);
+  return dashboardData.filter((item) => item.date.slice(5, 7) === month);
+}
+
+function getFilteredRecords() {
+  return getPeriodRecords().filter((item) => !selectedDate || item.date <= selectedDate);
 }
 
 function renderAll() {
   renderWmsSummary();
   const records = getFilteredRecords();
+  const trendRecords = getPeriodRecords();
   if (!records.length) return;
   const latest = records[records.length - 1];
   const uploadTime = dashboardPayload.mode === 'wms-item-summary' && dashboardPayload.uploadedAt
@@ -108,9 +112,9 @@ function renderAll() {
     : '';
   document.getElementById('data-date').textContent = `조회 기준 ${compactDate(latest.date)} · ${isForecast(latest) ? '예상' : '실적'}${uploadTime}`;
   renderMetrics(records);
-  renderInventoryChart(records);
-  renderCapaChart(records);
-  renderFlowChart(records);
+  renderInventoryChart(trendRecords);
+  renderCapaChart(trendRecords);
+  renderFlowChart(trendRecords);
   renderRecentTable(records);
 }
 
@@ -230,7 +234,7 @@ function renderCapaChart(records) {
       { label: '적정 CAPA 10,700 TON', data: records.map(() => 1), borderColor: '#2446a7', backgroundColor: 'rgba(36,70,167,.08)', fill: true, borderWidth: 2, pointRadius: 0, tension: .35 },
       { label: 'MAX CAPA 12,000 TON', data: records.map(() => MAX_CAPA_TON / TARGET_CAPA_TON), borderColor: '#f1a34a', borderWidth: 1.8, pointRadius: 0, borderDash: [4, 4], tension: .35 }
     ] },
-    options: { ...chartDefaults, scales: { ...chartDefaults.scales, y: { ...chartDefaults.scales.y, ticks: { ...chartDefaults.scales.y.ticks, callback: (value) => `${Number(value).toFixed(1)}x` } } }, plugins: { ...chartDefaults.plugins, tooltip: { ...chartDefaults.plugins.tooltip, callbacks: { label: (context) => `${context.dataset.label}: ${formatRatio(context.parsed.y)}` } } } }
+    options: { ...chartDefaults, scales: { ...chartDefaults.scales, y: { ...chartDefaults.scales.y, ticks: { ...chartDefaults.scales.y.ticks, callback: (value) => `${Number(value * 100).toFixed(0)}%` } } }, plugins: { ...chartDefaults.plugins, tooltip: { ...chartDefaults.plugins.tooltip, callbacks: { label: (context) => `${context.dataset.label}: ${formatRatio(context.parsed.y)}` } } } }
   });
 }
 
@@ -312,10 +316,26 @@ document.getElementById('today-button').addEventListener('click', () => {
 });
 document.getElementById('save-flow-button').addEventListener('click', saveFlowEdits);
 document.getElementById('reset-flow-button').addEventListener('click', resetFlowEdits);
+document.querySelectorAll('.trend-tab').forEach((tab) => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.trend-tab').forEach((item) => {
+      const active = item === tab;
+      item.classList.toggle('active', active);
+      item.setAttribute('aria-selected', String(active));
+    });
+    document.querySelectorAll('.trend-tab-panel').forEach((panel) => {
+      panel.hidden = panel.id !== tab.getAttribute('aria-controls');
+      panel.classList.toggle('active', !panel.hidden);
+    });
+  });
+});
 document.querySelectorAll('.nav-item').forEach((item) => {
   item.addEventListener('click', () => {
     document.querySelectorAll('.nav-item').forEach((navItem) => navItem.classList.remove('active'));
     item.classList.add('active');
+    if (item.getAttribute('href') === '#flow-trend-panel') {
+      document.querySelector('.trend-tab[data-trend-tab="flow"]').click();
+    }
   });
 });
 document.getElementById('excel-upload').addEventListener('change', (event) => {

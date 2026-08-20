@@ -73,6 +73,12 @@ h2 { font-size: 17px; letter-spacing: -.04em; margin-bottom: 0; }
 .legend-line { width: 18px; height: 3px; border-radius: 2px; display: inline-block; } .legend-line.navy { background: var(--navy); } .legend-line.mint { background: var(--mint); } .legend-line.forecast { height: 0; border-top: 2px dashed #8195df; }
 .legend-box { width: 8px; height: 8px; border-radius: 2px; display: inline-block; } .legend-box.inbound { background: var(--mint); } .legend-box.outbound { background: var(--orange); }
 .chart-box { position: relative; width: 100%; margin-top: 20px; } .chart-box.large { height: 245px; } .chart-box.medium { height: 235px; } .chart-box.capa { height: 173px; margin-top: 8px; }
+.trend-tabs { display: flex; gap: 5px; margin-top: 18px; border-bottom: 1px solid var(--line); }
+.trend-tab { border: 0; border-bottom: 2px solid transparent; background: transparent; color: var(--muted); cursor: pointer; padding: 8px 12px 10px; font: 700 11px 'Noto Sans KR'; }
+.trend-tab:hover, .trend-tab.active { color: var(--navy); border-bottom-color: var(--navy); }
+.trend-tab-panel[hidden] { display: none; }
+.panel-subheader { display: flex; align-items: center; justify-content: space-between; margin-top: 14px; }
+.panel-subheader .panel-help { margin: 0; }
 .capa-summary { margin-top: 22px; display: flex; align-items: baseline; gap: 9px; } .capa-summary strong { font: 800 30px Manrope; letter-spacing: -.06em; } .capa-summary span { color: var(--muted); font-size: 11px; }
 .capa-note { display: flex; align-items: center; justify-content: space-between; color: var(--muted); font-size: 10px; } .status-pill { color: #147e69; background: #e7f8f2; border-radius: 20px; padding: 5px 9px; font-weight: 700; }
 .table-actions { display: flex; gap: 6px; white-space: nowrap; }

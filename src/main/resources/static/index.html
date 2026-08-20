@@ -19,7 +19,7 @@
       <nav aria-label="주요 메뉴">
         <a class="nav-item active" href="#overview"><span class="nav-icon">◈</span>재고 현황</a>
         <a class="nav-item" href="#trend"><span class="nav-icon">⌁</span>재고 트렌드</a>
-        <a class="nav-item" href="#flow"><span class="nav-icon">↕</span>입출고 분석</a>
+        <a class="nav-item" href="#flow-trend-panel"><span class="nav-icon">↕</span>입출고 분석</a>
         <a class="nav-item" href="#capacity"><span class="nav-icon">▥</span>CAPA 모니터링</a>
       </nav>
       <div class="sidebar-footer">
@@ -115,10 +115,20 @@
       <section class="dashboard-grid">
         <article class="panel panel-wide" id="trend">
           <div class="panel-header">
-            <div><p class="panel-kicker">INVENTORY TREND</p><h2>날짜별 현재고 추이</h2></div>
+            <div><p class="panel-kicker">INVENTORY TREND</p><h2>2026년 재고량 변화 트렌드</h2></div>
             <div class="legend"><span class="legend-item"><i class="legend-line navy"></i>실적</span><span class="legend-item"><i class="legend-line forecast"></i>예상</span><span class="legend-item"><i class="legend-line mint"></i>적정 CAPA</span></div>
           </div>
-          <div class="chart-box large"><canvas id="inventory-chart" aria-label="날짜별 현재고와 CAPA 추이 차트"></canvas></div>
+          <div class="trend-tabs" role="tablist" aria-label="재고 트렌드 보기">
+            <button class="trend-tab active" type="button" role="tab" aria-selected="true" aria-controls="inventory-trend-panel" data-trend-tab="inventory">재고량 변화</button>
+            <button class="trend-tab" type="button" role="tab" aria-selected="false" aria-controls="flow-trend-panel" data-trend-tab="flow">날짜별 입출고량</button>
+          </div>
+          <div class="trend-tab-panel active" id="inventory-trend-panel" role="tabpanel">
+            <div class="chart-box large"><canvas id="inventory-chart" aria-label="2026년 날짜별 실적 및 예상 현재고와 CAPA 추이 차트"></canvas></div>
+          </div>
+          <div class="trend-tab-panel" id="flow-trend-panel" role="tabpanel" hidden>
+            <div class="panel-subheader"><p class="panel-help">2026년 전체 날짜별 입고와 출고 흐름</p><div class="legend"><span class="legend-item"><i class="legend-box inbound"></i>입고</span><span class="legend-item"><i class="legend-box outbound"></i>출고</span></div></div>
+            <div class="chart-box large"><canvas id="flow-chart" aria-label="2026년 날짜별 입고와 출고량 차트"></canvas></div>
+          </div>
         </article>
 
         <article class="panel" id="capacity">
@@ -128,13 +138,6 @@
           <div class="capa-note"><span class="status-pill" id="capa-pill">분석 중</span><span>적정 10,700 TON · MAX 12,000 TON</span></div>
         </article>
 
-        <article class="panel panel-wide">
-          <div class="panel-header">
-            <div><p class="panel-kicker">INBOUND & OUTBOUND</p><h2>날짜별 입출고량</h2><p class="panel-help">최근 운영 현황 표에서 입고·출고를 직접 수정할 수 있습니다.</p></div>
-            <div class="legend"><span class="legend-item"><i class="legend-box inbound"></i>입고</span><span class="legend-item"><i class="legend-box outbound"></i>출고</span></div>
-          </div>
-          <div class="chart-box medium"><canvas id="flow-chart" aria-label="날짜별 입고와 출고량 차트"></canvas></div>
-        </article>
 
         <article class="panel recent-panel">
           <div class="panel-header">
