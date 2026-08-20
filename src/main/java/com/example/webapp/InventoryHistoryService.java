@@ -44,6 +44,16 @@ public class InventoryHistoryService {
                     INDEX idx_inventory_upload_history_as_of_date (as_of_date)
                 )
                 """);
+        jdbcTemplate.execute("""
+                CREATE TABLE IF NOT EXISTS inventory_manual_overrides (
+                    record_date DATE PRIMARY KEY,
+                    inbound DECIMAL(20,0),
+                    outbound DECIMAL(20,0),
+                    current_stock DECIMAL(20,0),
+                    updated_at DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6)
+                        ON UPDATE CURRENT_TIMESTAMP(6)
+                )
+                """);
     }
 
     public void save(String originalFilename, Map<String, Object> payload) {
@@ -70,6 +80,45 @@ public class InventoryHistoryService {
                 numberValue(summary.get("totalWeight")),
                 payloadJson
         );
+    }
+
+    public List<Map<String, Object>> findManualOverrides() {
+        return jdbcTemplate.query("""
+                SELECT record_date, inbound, outbound, current_stock, updated_at
+                FROM inventory_manual_overrides
+                ORDER BY record_date ASC
+                """, (resultSet, rowNumber) -> {
+            Map<String, Object> item = new LinkedHashMap<>();
+            item.put("date", resultSet.getDate("record_date").toLocalDate().toString());
+            item.put("inbound", roundedNumber(resultSet.getBigDecimal("inbound")));
+            item.put("outbound", roundedNumber(resultSet.getBigDecimal("outbound")));
+            item.put("currentStock", roundedNumber(resultSet.getBigDecimal("current_stock")));
+            item.put("updatedAt", resultSet.getTimestamp("updated_at").toLocalDateTime().toString());
+            return item;
+        });
+    }
+
+    public Map<String, Object> saveManualOverride(LocalDate date, Map<String, Object> values) {
+        Number inbound = roundedInput(values.get("inbound"));
+        Number outbound = roundedInput(values.get("outbound"));
+        Number currentStock = roundedInput(values.get("currentStock"));
+        jdbcTemplate.update("""
+                INSERT INTO inventory_manual_overrides
+                    (record_date, inbound, outbound, current_stock)
+                VALUES (?, ?, ?, ?)
+                ON DUPLICATE KEY UPDATE
+                    inbound = VALUES(inbound),
+                    outbound = VALUES(outbound),
+                    current_stock = VALUES(current_stock)
+                """, date, inbound, outbound, currentStock);
+        return findManualOverrides().stream()
+                .filter(item -> date.toString().equals(item.get("date")))
+                .findFirst()
+                .orElseThrow();
+    }
+
+    public void deleteManualOverrides() {
+        jdbcTemplate.update("DELETE FROM inventory_manual_overrides");
     }
 
     public List<Map<String, Object>> findAll() {
@@ -100,6 +149,13 @@ public class InventoryHistoryService {
 
     private static BigDecimal roundedNumber(BigDecimal value) {
         return value == null ? null : value.setScale(0, RoundingMode.HALF_UP);
+    }
+
+    private static Number roundedInput(Object value) {
+        if (!(value instanceof Number number)) {
+            return null;
+        }
+        return BigDecimal.valueOf(number.doubleValue()).setScale(0, RoundingMode.HALF_UP);
     }
 
     private static Object roundNumbers(Object value) {

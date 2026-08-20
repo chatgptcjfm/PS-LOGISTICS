@@ -21,6 +21,7 @@
         <a class="nav-item" href="#trend"><span class="nav-icon">⌁</span>재고 트렌드</a>
         <a class="nav-item" href="#flow-trend-panel"><span class="nav-icon">↕</span>입출고 분석</a>
         <a class="nav-item" href="#capacity"><span class="nav-icon">▥</span>CAPA 모니터링</a>
+        <a class="nav-item" href="#history"><span class="nav-icon">☷</span>전체 재고 이력</a>
       </nav>
       <div class="sidebar-footer">
         <div class="source-caption">SOURCE FILE</div>
@@ -89,6 +90,19 @@
         </article>
       </section>
 
+      <section class="panel weekly-forecast-panel" id="weekly-forecast" aria-label="1주일 재고 예상 및 수기 입력">
+        <div class="panel-header">
+          <div><p class="panel-kicker">7-DAY INVENTORY PLAN</p><h2>1주일 재고량 예상</h2><p class="panel-help">입고·출고량을 입력하면 다음 7일 예상 재고를 계산합니다. 저장한 값은 서버에 보관됩니다.</p></div>
+          <button class="table-action primary" id="save-weekly-button" type="button">1주일 계획 저장</button>
+        </div>
+        <div class="table-wrap weekly-table-wrap">
+          <table class="editable-table">
+            <thead><tr><th>날짜</th><th>구분</th><th>기준 재고</th><th>입고 입력</th><th>출고 입력</th><th>예상 재고</th><th>순변동</th></tr></thead>
+            <tbody id="weekly-forecast-table"></tbody>
+          </table>
+        </div>
+      </section>
+
       <section class="wms-summary-panel panel" id="wms-summary" aria-label="WMS 품목 분류 요약">
         <div class="panel-header">
           <div>
@@ -151,7 +165,20 @@
           </div>
         </article>
       </section>
-      <footer class="page-footer">기존 연간 재고 변동 유지 · 품목형 WMS 총중량 KG ÷ 1,000 · 업로드 시각 기준 현재고 스냅샷 · 입고/출고 수기 변경은 이 브라우저에 저장 · 표시 단위 TON</footer>
+
+      <section class="panel history-panel" id="history" aria-label="전체 재고 이력">
+        <div class="panel-header">
+          <div><p class="panel-kicker">FULL INVENTORY HISTORY</p><h2>전체 재고 이력</h2><p class="panel-help">날짜별 재고량과 입출고량을 모두 확인하고 수기로 수정할 수 있습니다.</p></div>
+          <div class="table-actions"><button class="table-action primary" id="save-history-button" type="button">전체 이력 저장</button><button class="table-action" id="reset-history-button" type="button">수기값 초기화</button></div>
+        </div>
+        <div class="table-wrap history-table-wrap">
+          <table class="editable-table">
+            <thead><tr><th>날짜</th><th>구분</th><th>현재고</th><th>입고</th><th>출고</th><th>순변동</th></tr></thead>
+            <tbody id="history-table"></tbody>
+          </table>
+        </div>
+      </section>
+      <footer class="page-footer">기존 연간 재고 변동 유지 · 품목형 WMS 총중량 KG ÷ 1,000 · 업로드 시각 기준 현재고 스냅샷 · 수기 입력은 서버에 저장 · 표시 단위 TON</footer>
     </main>
   </div>
   <script src="/js/dashboard.js"></script>

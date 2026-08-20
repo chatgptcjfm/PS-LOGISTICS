@@ -43,6 +43,9 @@ Java 17, Spring Boot, MariaDB 기반 웹 프로젝트의 로컬 샌드박스입�
 - Excel 업로드 결과를 MariaDB `inventory_upload_history` 테이블에 영구 저장
 - 대시보드 재접속·PM2 재시작 후에도 저장된 업로드 이력 자동 복원
 - 여러 업로드를 시간순으로 누적 병합하며, 동일 날짜는 최신 snapshot을 적용
+- 메인 화면의 `1주일 재고량 예상` 표에서 오늘부터 7일간 입고·출고량을 수기로 입력하고 순차 예상 재고를 계산
+- `전체 재고 이력` 탭에서 전체 날짜의 현재고·입고·출고량을 확인하고 수기 수정
+- 수기 현재고·입고·출고량을 MariaDB `inventory_manual_overrides` 테이블에 저장하고 새로고침·PM2 재시작 후 복원
 
 ## 대시보드 URI
 
@@ -50,11 +53,14 @@ Java 17, Spring Boot, MariaDB 기반 웹 프로젝트의 로컬 샌드박스입�
 - `/data/inventory-dashboard.json` — 대시보드용 정적 연간 baseline 데이터
 - `POST /api/inventory/upload` — multipart/form-data의 `file` 필드로 `.xlsx` 업로드 및 MariaDB 저장
 - `GET /api/inventory/history` — 저장된 Excel 업로드 이력과 원본 payload 조회
+- `GET /api/inventory/manual-overrides` — 날짜별 수기 재고·입출고값 조회
+- `PUT /api/inventory/manual-overrides/{date}` — 특정 날짜 수기값 저장/수정 (`YYYY-MM-DD`)
+- `DELETE /api/inventory/manual-overrides` — 전체 수기값 초기화
 - 데이터 기준 시트: 업로드 파일의 첫 번째 시트(`26년 09시 WMS 재고`)
 - 기준일: `2026-08-13` (이 날짜까지 실적, `2026-08-14`부터 예상)
 - 단위: TON
 
-기본 화면은 변환된 정적 JSON으로 빠르게 표시하고, Excel 업로드 시 Apache POI로 첫 번째 시트를 요청 단위로 파싱해 현재 화면에 반영합니다. 기준 날짜를 선택하면 해당 날짜까지의 데이터로 KPI·차트를 계산하며, 날짜별 입고/출고 수기 변경은 현재 브라우저의 localStorage에 저장됩니다. 현재 업로드 및 수기 변경 결과는 MariaDB에 저장하지 않으며, 이후 사용자별 업로드 이력·MariaDB 적재·공유 저장 API로 확장할 수 있습니다.
+기본 화면은 변환된 정적 JSON으로 빠르게 표시하고, Excel 업로드 시 Apache POI로 첫 번째 시트를 요청 단위로 파싱해 현재 화면에 반영합니다. 기준 날짜를 선택하면 해당 날짜까지의 데이터로 KPI·차트를 계산합니다. 1주일 예상 표는 오늘을 기준으로 기준 재고에 `입고 - 출고`를 날짜별 누적하며, 전체 이력 표와 최근 운영 현황에서 입력한 수기값은 MariaDB에 저장됩니다. 기존 localStorage는 서버 API 장애 시의 보조 fallback으로만 사용합니다.
 
 ## 실행 방법
 
@@ -98,9 +104,14 @@ mvn clean package
 java -jar target/webapp-0.0.1-SNAPSHOT.jar
 ```
 
+## 데이터 저장 구조
+
+- `inventory_upload_history`: Excel 업로드 파일과 파싱 payload 누적 이력
+- `inventory_manual_overrides`: 날짜별 수기 `current_stock`, `inbound`, `outbound` 및 수정 시각
+- 수기 입력 숫자는 저장 전 소수점 첫째 자리에서 반올림하여 TON 정수로 저장
+
 ## 다음 단계
 
-- 수기 변경 및 업로드 결과의 MariaDB 적재/사용자별 공유
 - 날짜/창고/품목별 세부 필터
 - 도메인 모델 및 JPA 엔티티 추가
 - Flyway 또는 Liquibase 마이그레이션 도입

@@ -39,6 +39,15 @@ const readManualOverrides = () => {
     manualOverrides = {};
   }
 };
+const loadManualOverrides = async () => {
+  const response = await fetch('/api/inventory/manual-overrides');
+  if (!response.ok) {
+    readManualOverrides();
+    return;
+  }
+  const overrides = await response.json();
+  manualOverrides = Object.fromEntries(overrides.map((item) => [item.date, item]));
+};
 const writeManualOverrides = () => localStorage.setItem(OVERRIDES_STORAGE_KEY, JSON.stringify(manualOverrides));
 const clampDate = (date, records) => {
   if (!records.length) return date;
@@ -57,6 +66,7 @@ async function loadDashboard() {
 
   const historyResponse = await fetch('/api/inventory/history');
   const history = historyResponse.ok ? await historyResponse.json() : [];
+  await loadManualOverrides();
   setDashboardPayload(mergePersistedHistory(baselinePayload, history));
   document.getElementById('upload-status').textContent = history.length
     ? `저장된 업로드 ${history.length}건을 복원했습니다.`
@@ -98,7 +108,6 @@ function setDashboardPayload(payload) {
     payload = mergeItemSnapshot(payload);
   }
   dashboardPayload = payload;
-  readManualOverrides();
   dashboardData = (payload.records || []).map((record) => ({
     ...record,
     ...(manualOverrides[record.date] || {})
@@ -136,6 +145,8 @@ function renderAll() {
   renderCapaChart(trendRecords);
   renderFlowChart(trendRecords);
   renderRecentTable(records);
+  renderWeeklyForecast();
+  renderHistoryTable();
 }
 
 function renderWmsSummary() {
@@ -273,34 +284,92 @@ function renderRecentTable(records) {
   const rows = records.slice(-7).reverse().map((record) => {
     const net = valueOrZero(record.inbound) - valueOrZero(record.outbound);
     const typeLabel = isForecast(record) ? '<span class="table-badge forecast">예상</span>' : '<span class="table-badge actual">실적</span>';
-    return `<tr><td>${compactDate(record.date)}</td><td>${typeLabel}</td><td>${formatTon(record.currentStock)}</td><td><input class="flow-edit" data-date="${record.date}" data-field="inbound" type="number" min="0" step="0.001" value="${record.inbound ?? ''}" aria-label="${record.date} 입고량"></td><td><input class="flow-edit" data-date="${record.date}" data-field="outbound" type="number" min="0" step="0.001" value="${record.outbound ?? ''}" aria-label="${record.date} 출고량"></td><td class="${net >= 0 ? 'positive' : 'negative'}">${net >= 0 ? '+' : ''}${formatTon(net)}</td></tr>`;
+    return `<tr><td>${compactDate(record.date)}</td><td>${typeLabel}</td><td>${formatTon(record.currentStock)}</td><td><input class="manual-edit" data-date="${record.date}" data-field="inbound" type="number" min="0" step="1" value="${record.inbound ?? ''}" aria-label="${record.date} 입고량"></td><td><input class="manual-edit" data-date="${record.date}" data-field="outbound" type="number" min="0" step="1" value="${record.outbound ?? ''}" aria-label="${record.date} 출고량"></td><td class="${net >= 0 ? 'positive' : 'negative'}">${net >= 0 ? '+' : ''}${formatTon(net)}</td></tr>`;
   }).join('');
   document.getElementById('recent-table').innerHTML = rows;
 }
 
-function saveFlowEdits() {
-  const inputs = document.querySelectorAll('.flow-edit');
-  inputs.forEach((input) => {
-    const value = Number(input.value);
-    if (!Number.isFinite(value) || value < 0) return;
-    manualOverrides[input.dataset.date] = {
-      ...(manualOverrides[input.dataset.date] || {}),
-      [input.dataset.field]: value
-    };
-  });
-  writeManualOverrides();
-  dashboardData = dashboardData.map((record) => ({ ...record, ...(manualOverrides[record.date] || {}) }));
-  renderAll();
-  document.getElementById('upload-status').textContent = '입고·출고 수기 변경을 저장했습니다.';
+function dateAfterDays(days) {
+  const date = new Date(`${localDateString()}T00:00:00`);
+  date.setDate(date.getDate() + days);
+  return localDateString(date);
 }
 
-function resetFlowEdits() {
-  if (!window.confirm('저장된 입고·출고 수기 변경을 모두 초기화할까요?')) return;
+function recordForDate(date) {
+  return dashboardData.find((record) => record.date === date) || {};
+}
+
+function renderWeeklyForecast() {
+  const byDate = new Map(dashboardData.map((record) => [record.date, record]));
+  let runningStock = valueOrZero(recordForDate(localDateString()).currentStock);
+  const rows = Array.from({ length: 7 }, (_, index) => {
+    const date = dateAfterDays(index);
+    const record = byDate.get(date) || {};
+    const override = manualOverrides[date] || {};
+    const inbound = override.inbound ?? valueOrZero(record.inbound);
+    const outbound = override.outbound ?? valueOrZero(record.outbound);
+    const baseStock = index === 0
+      ? (override.currentStock != null
+        ? override.currentStock
+        : (valueOrZero(record.currentStock) || runningStock))
+      : runningStock;
+    runningStock = Math.round(baseStock + inbound - outbound);
+    const typeLabel = isForecast(record) ? '<span class="table-badge forecast">예상</span>' : '<span class="table-badge actual">실적</span>';
+    return `<tr><td>${compactDate(date)}</td><td>${typeLabel}</td><td>${formatTon(baseStock)}</td><td><input class="manual-edit" data-date="${date}" data-field="inbound" type="number" min="0" step="1" value="${inbound}" aria-label="${date} 1주일 입고량"></td><td><input class="manual-edit" data-date="${date}" data-field="outbound" type="number" min="0" step="1" value="${outbound}" aria-label="${date} 1주일 출고량"></td><td class="projected-stock">${formatTon(runningStock)}</td><td class="${inbound - outbound >= 0 ? 'positive' : 'negative'}">${inbound - outbound >= 0 ? '+' : ''}${formatTon(inbound - outbound)}</td></tr>`;
+  }).join('');
+  document.getElementById('weekly-forecast-table').innerHTML = rows;
+}
+
+function renderHistoryTable() {
+  const rows = dashboardData.map((record) => {
+    const net = valueOrZero(record.inbound) - valueOrZero(record.outbound);
+    const typeLabel = isForecast(record) ? '<span class="table-badge forecast">예상</span>' : '<span class="table-badge actual">실적</span>';
+    return `<tr><td>${compactDate(record.date)}</td><td>${typeLabel}</td><td><input class="manual-edit" data-date="${record.date}" data-field="currentStock" type="number" min="0" step="1" value="${record.currentStock ?? ''}" aria-label="${record.date} 현재고"></td><td><input class="manual-edit" data-date="${record.date}" data-field="inbound" type="number" min="0" step="1" value="${record.inbound ?? ''}" aria-label="${record.date} 입고량"></td><td><input class="manual-edit" data-date="${record.date}" data-field="outbound" type="number" min="0" step="1" value="${record.outbound ?? ''}" aria-label="${record.date} 출고량"></td><td class="${net >= 0 ? 'positive' : 'negative'}">${net >= 0 ? '+' : ''}${formatTon(net)}</td></tr>`;
+  }).join('');
+  document.getElementById('history-table').innerHTML = rows;
+}
+
+function applyManualOverrides() {
+  dashboardData = (dashboardPayload.records || []).map((record) => ({
+    ...record,
+    ...(manualOverrides[record.date] || {})
+  }));
+}
+
+async function saveManualOverrides() {
+  const valuesByDate = new Map();
+  document.querySelectorAll('.manual-edit').forEach((input) => {
+    const value = input.value === '' ? null : Math.round(Number(input.value));
+    if (value !== null && (!Number.isFinite(value) || value < 0)) return;
+    const dateValues = valuesByDate.get(input.dataset.date) || {};
+    dateValues[input.dataset.field] = value;
+    valuesByDate.set(input.dataset.date, dateValues);
+  });
+  try {
+    await Promise.all([...valuesByDate].map(([date, values]) => fetch(`/api/inventory/manual-overrides/${date}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(values)
+    }).then(async (response) => {
+      if (!response.ok) throw new Error((await response.json()).message || '수기 데이터를 저장하지 못했습니다.');
+    })));
+    await loadManualOverrides();
+    applyManualOverrides();
+    renderAll();
+    document.getElementById('upload-status').textContent = `수기 재고·입출고 데이터를 ${valuesByDate.size}일 저장했습니다.`;
+  } catch (error) {
+    document.getElementById('upload-status').textContent = error.message;
+  }
+}
+
+async function resetFlowEdits() {
+  if (!window.confirm('저장된 수기 재고·입출고 데이터를 모두 초기화할까요?')) return;
+  await fetch('/api/inventory/manual-overrides', { method: 'DELETE' });
   manualOverrides = {};
   localStorage.removeItem(OVERRIDES_STORAGE_KEY);
-  dashboardData = (dashboardPayload.records || []).map((record) => ({ ...record }));
+  applyManualOverrides();
   renderAll();
-  document.getElementById('upload-status').textContent = '수기 변경을 초기화했습니다.';
+  document.getElementById('upload-status').textContent = '수기 재고·입출고 데이터를 초기화했습니다.';
 }
 
 async function uploadExcel(file) {
@@ -335,8 +404,11 @@ document.getElementById('today-button').addEventListener('click', () => {
   document.getElementById('as-of-date').value = selectedDate;
   renderAll();
 });
-document.getElementById('save-flow-button').addEventListener('click', saveFlowEdits);
+document.getElementById('save-flow-button').addEventListener('click', saveManualOverrides);
+document.getElementById('save-weekly-button').addEventListener('click', saveManualOverrides);
+document.getElementById('save-history-button').addEventListener('click', saveManualOverrides);
 document.getElementById('reset-flow-button').addEventListener('click', resetFlowEdits);
+document.getElementById('reset-history-button').addEventListener('click', resetFlowEdits);
 document.querySelectorAll('.trend-tab').forEach((tab) => {
   tab.addEventListener('click', () => {
     document.querySelectorAll('.trend-tab').forEach((item) => {
