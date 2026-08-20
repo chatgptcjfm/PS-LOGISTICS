@@ -94,7 +94,7 @@
           <div>
             <p class="panel-kicker">WMS ITEM SUMMARY</p>
             <h2>WMS 품목별 현재고 요약</h2>
-            <p class="panel-help" id="wms-summary-help">업로드한 첫 번째 시트의 총중량을 품목 유형과 시장별로 집계합니다.</p>
+            <p class="panel-help" id="wms-summary-help">WMS 업로드 파일 기준 현재고 요약</p>
           </div>
           <span class="summary-source-badge" id="wms-summary-badge">대기 중</span>
         </div>
@@ -102,7 +102,7 @@
           <div class="summary-chart-box"><canvas id="category-chart" aria-label="품목 유형별 현재고 차트"></canvas></div>
           <div class="summary-chart-box"><canvas id="market-chart" aria-label="내수와 수출 현재고 차트"></canvas></div>
           <div class="summary-table-wrap">
-            <h3>유형 × 시장</h3>
+            <h3>품목 유형별 현황</h3>
             <table class="summary-table">
               <thead><tr><th>품목 유형</th><th>내수</th><th>수출</th><th>합계</th></tr></thead>
               <tbody id="category-market-table"></tbody>
@@ -133,7 +133,6 @@
 
         <article class="panel" id="capacity">
           <div class="panel-header"><div><p class="panel-kicker">CAPACITY UTILIZATION</p><h2>창고 대비 CAPA</h2></div></div>
-          <div class="capa-summary"><strong id="capa-summary-value">-</strong><span>적정 CAPA 대비 평균</span></div>
           <div class="chart-box capa"><canvas id="capa-chart" aria-label="CAPA 비율 차트"></canvas></div>
           <div class="capa-note"><span class="status-pill" id="capa-pill">분석 중</span><span>적정 10,700 TON · MAX 12,000 TON</span></div>
         </article>

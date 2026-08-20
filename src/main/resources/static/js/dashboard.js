@@ -25,7 +25,7 @@ const dateLabel = (date) => {
   return `${Number(month)}/${Number(day)}`;
 };
 const compactDate = (date) => date.replaceAll('-', '.');
-const isForecast = (record) => record.dataType === 'forecast';
+const isForecast = (record) => record.dataType === 'forecast' && record.date > localDateString();
 const actualRecords = (records) => records.filter((record) => !isForecast(record));
 const latestOperationalRecord = (records) => records[records.length - 1];
 const localDateString = (date = new Date()) => {
@@ -158,7 +158,7 @@ function renderWmsSummary() {
   const marketValues = markets.map((market) => valueOrZero(byMarket[market]));
 
   document.getElementById('wms-summary-badge').textContent = `${formatTon(summary.totalWeight)} TON`;
-  document.getElementById('wms-summary-help').textContent = `${dashboardPayload.sheetName || '첫 번째 시트'} · 총중량 기준 · ${summary.itemCount ?? 0}건 품목 집계`;
+  document.getElementById('wms-summary-help').textContent = 'WMS 업로드 파일 기준 현재고 요약';
 
   destroyChart(categoryChart);
   categoryChart = new Chart(document.getElementById('category-chart'), {
@@ -211,7 +211,6 @@ function renderMetrics(records) {
   document.getElementById('net-flow').textContent = `${netFlow >= 0 ? '+' : ''}${formatTon(netFlow)}`;
   document.getElementById('target-status').textContent = target <= 1 ? '안정' : '초과';
   document.getElementById('max-status').textContent = max <= 1 ? '여유' : '주의';
-  document.getElementById('capa-summary-value').textContent = formatRatio(records.reduce((sum, record) => sum + targetRatio(record), 0) / records.length);
   const pill = document.getElementById('capa-pill');
   pill.textContent = max <= 1 ? 'MAX 기준 여유' : 'MAX 기준 초과';
   pill.style.color = max <= 1 ? '#147e69' : '#b46c27';
