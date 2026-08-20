@@ -5,6 +5,9 @@ let dashboardPayload = {};
 let inventoryChart;
 let capaChart;
 let flowChart;
+let selectedDate = '';
+let manualOverrides = {};
+const OVERRIDES_STORAGE_KEY = 'inventory-flow-overrides-v1';
 
 const valueOrZero = (value) => typeof value === 'number' ? value : 0;
 const formatTon = (value) => value == null ? '-' : numberFormat.format(Math.round(value));
@@ -16,9 +19,27 @@ const dateLabel = (date) => {
 const compactDate = (date) => date.replaceAll('-', '.');
 const isForecast = (record) => record.dataType === 'forecast';
 const actualRecords = (records) => records.filter((record) => !isForecast(record));
-const latestOperationalRecord = (records) => {
-  const actual = actualRecords(records);
-  return actual.length ? actual[actual.length - 1] : records[records.length - 1];
+const latestOperationalRecord = (records) => records[records.length - 1];
+const localDateString = (date = new Date()) => {
+  const offsetDate = new Date(date.getTime() - date.getTimezoneOffset() * 60000);
+  return offsetDate.toISOString().slice(0, 10);
+};
+const readManualOverrides = () => {
+  try {
+    manualOverrides = JSON.parse(localStorage.getItem(OVERRIDES_STORAGE_KEY) || '{}');
+  } catch (error) {
+    manualOverrides = {};
+  }
+};
+const writeManualOverrides = () => localStorage.setItem(OVERRIDES_STORAGE_KEY, JSON.stringify(manualOverrides));
+const clampDate = (date, records) => {
+  if (!records.length) return date;
+  const min = records[0].date;
+  const max = records[records.length - 1].date;
+  return date < min ? min : date > max ? max : date;
+};
+const updateClock = () => {
+  document.getElementById('live-clock').textContent = `현재시간 ${new Intl.DateTimeFormat('ko-KR', { dateStyle: 'medium', timeStyle: 'medium' }).format(new Date())}`;
 };
 
 async function loadDashboard() {
@@ -30,22 +51,31 @@ async function loadDashboard() {
 
 function setDashboardPayload(payload) {
   dashboardPayload = payload;
-  dashboardData = payload.records || [];
-  const asOf = payload.asOfDate || '2026-08-13';
-  document.getElementById('data-date').textContent = `기준일 ${asOf.replaceAll('-', '.')} · 이후 예상`;
+  readManualOverrides();
+  dashboardData = (payload.records || []).map((record) => ({
+    ...record,
+    ...(manualOverrides[record.date] || {})
+  }));
+  selectedDate = clampDate(selectedDate || localDateString(), dashboardData);
+  const dateInput = document.getElementById('as-of-date');
+  dateInput.value = selectedDate;
+  document.getElementById('data-date').textContent = `조회 기준 ${compactDate(selectedDate)} · ${isForecast(dashboardData.find((record) => record.date === selectedDate)) ? '예상' : '실적'}`;
   renderAll();
 }
 
 function getFilteredRecords() {
   const selected = document.getElementById('period-select').value;
-  if (selected === 'all') return dashboardData;
+  const dateLimited = dashboardData.filter((item) => !selectedDate || item.date <= selectedDate);
+  if (selected === 'all') return dateLimited;
   const month = selected.slice(-2);
-  return dashboardData.filter((item) => item.date.slice(5, 7) === month);
+  return dateLimited.filter((item) => item.date.slice(5, 7) === month);
 }
 
 function renderAll() {
   const records = getFilteredRecords();
   if (!records.length) return;
+  const latest = records[records.length - 1];
+  document.getElementById('data-date').textContent = `조회 기준 ${compactDate(latest.date)} · ${isForecast(latest) ? '예상' : '실적'}`;
   renderMetrics(records);
   renderInventoryChart(records);
   renderCapaChart(records);
@@ -132,9 +162,34 @@ function renderRecentTable(records) {
   const rows = records.slice(-7).reverse().map((record) => {
     const net = valueOrZero(record.inbound) - valueOrZero(record.outbound);
     const typeLabel = isForecast(record) ? '<span class="table-badge forecast">예상</span>' : '<span class="table-badge actual">실적</span>';
-    return `<tr><td>${compactDate(record.date)}</td><td>${typeLabel}</td><td>${formatTon(record.currentStock)}</td><td>${formatTon(record.inbound)}</td><td>${formatTon(record.outbound)}</td><td class="${net >= 0 ? 'positive' : 'negative'}">${net >= 0 ? '+' : ''}${formatTon(net)}</td></tr>`;
+    return `<tr><td>${compactDate(record.date)}</td><td>${typeLabel}</td><td>${formatTon(record.currentStock)}</td><td><input class="flow-edit" data-date="${record.date}" data-field="inbound" type="number" min="0" step="0.001" value="${record.inbound ?? ''}" aria-label="${record.date} 입고량"></td><td><input class="flow-edit" data-date="${record.date}" data-field="outbound" type="number" min="0" step="0.001" value="${record.outbound ?? ''}" aria-label="${record.date} 출고량"></td><td class="${net >= 0 ? 'positive' : 'negative'}">${net >= 0 ? '+' : ''}${formatTon(net)}</td></tr>`;
   }).join('');
   document.getElementById('recent-table').innerHTML = rows;
+}
+
+function saveFlowEdits() {
+  const inputs = document.querySelectorAll('.flow-edit');
+  inputs.forEach((input) => {
+    const value = Number(input.value);
+    if (!Number.isFinite(value) || value < 0) return;
+    manualOverrides[input.dataset.date] = {
+      ...(manualOverrides[input.dataset.date] || {}),
+      [input.dataset.field]: value
+    };
+  });
+  writeManualOverrides();
+  dashboardData = dashboardData.map((record) => ({ ...record, ...(manualOverrides[record.date] || {}) }));
+  renderAll();
+  document.getElementById('upload-status').textContent = '입고·출고 수기 변경을 저장했습니다.';
+}
+
+function resetFlowEdits() {
+  if (!window.confirm('저장된 입고·출고 수기 변경을 모두 초기화할까요?')) return;
+  manualOverrides = {};
+  localStorage.removeItem(OVERRIDES_STORAGE_KEY);
+  dashboardData = (dashboardPayload.records || []).map((record) => ({ ...record }));
+  renderAll();
+  document.getElementById('upload-status').textContent = '수기 변경을 초기화했습니다.';
 }
 
 async function uploadExcel(file) {
@@ -155,6 +210,18 @@ async function uploadExcel(file) {
 }
 
 document.getElementById('period-select').addEventListener('change', renderAll);
+document.getElementById('as-of-date').addEventListener('change', (event) => {
+  selectedDate = clampDate(event.target.value, dashboardData);
+  event.target.value = selectedDate;
+  renderAll();
+});
+document.getElementById('today-button').addEventListener('click', () => {
+  selectedDate = clampDate(localDateString(), dashboardData);
+  document.getElementById('as-of-date').value = selectedDate;
+  renderAll();
+});
+document.getElementById('save-flow-button').addEventListener('click', saveFlowEdits);
+document.getElementById('reset-flow-button').addEventListener('click', resetFlowEdits);
 document.querySelectorAll('.nav-item').forEach((item) => {
   item.addEventListener('click', () => {
     document.querySelectorAll('.nav-item').forEach((navItem) => navItem.classList.remove('active'));
@@ -165,6 +232,8 @@ document.getElementById('excel-upload').addEventListener('change', (event) => {
   uploadExcel(event.target.files[0]);
   event.target.value = '';
 });
+updateClock();
+setInterval(updateClock, 1000);
 loadDashboard().catch((error) => {
   document.getElementById('data-date').textContent = error.message;
   console.error(error);
